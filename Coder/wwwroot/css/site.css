@@ -16,3 +16,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.box-shadow[b-2bos0jdq8r] {
+    box-shadow: 0 .25rem .75rem #4F81BD !important;
+}
+
+.border-top {
+    border-top: 1px solid #4F81BD !important;
+}
