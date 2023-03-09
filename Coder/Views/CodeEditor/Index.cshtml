@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css" media="screen">
+    #editor {
+        position: absolute;
+        top: 137px;
+        right: 46px;
+        bottom: 139px;
+        left: 695px;
+        height:400px;
+    }
+</style>
+
+<div class="row">
+    <div class="col">
+        <section>
+            
+                <h4>question heading</h4>
+                <hr />
+                
+                <div class="sec-left">
+                   <p>Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
+                   </p>
+                </div>
+        <!--   <div id="runresult">
+                <h5>Test result</h5>
+                <p>
+                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
+                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
+                    You are given a class Solution with a main method. Complete the given code so that it outputs
+                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
+                </p>
+                <p>
+                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
+                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
+                    You are given a class Solution with a main method. Complete the given code so that it outputs
+                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
+                </p>
+                <p>
+                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
+                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
+                    You are given a class Solution with a main method. Complete the given code so that it outputs
+                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
+                </p>
+            </div> -->
+        </section>
+    </div>
+
+    <div class="col">
+        
+            <form id="answer" method="post">
+                <div class="form-floating">
+                    <select name="codelanguage" id="codelanguage" class="select-right">
+                        <option value="Java">Java</option>
+                        <option value="C_Cpp">C</option>
+                        <option value="C_Cpp">C++</option>
+                    </select>        
+                </div>
+            <div class="sec-right">
+                <div id="editor">
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        /* Enter your code here. 
+           Your class should be named Solution. */
+    }
+}                    
+                </div>
+            </div>
+          
+                <button id="codeRun" type="submit" class="btn btn-outline-primary btn-bottom-1">Run</button>
+                <button id="codeSubmit" type="submit" class="btn btn-primary btn-bottom-2">Submit Code</button>
+            </form>
+        
+        
+    </div>
+</div>
+
+<!-- <script src="~/js/ace.js" type="text/javascript" charset="utf-8"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.3/ace.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/java");
+</script>

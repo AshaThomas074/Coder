@@ -24,3 +24,71 @@ body {
 .border-top {
     border-top: 1px solid #4F81BD !important;
 }
+
+button, input, optgroup, select, textarea {
+    margin-top: 5px;
+    font-family: inherit;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #4F81BD;
+    border-color: #4F81BD;
+}
+
+    .btn-primary:hover {
+        background-color: #086080;
+        border-color: #086080;
+    }
+
+.btn-outline-primary {
+    color: #4F81BD;
+    border-color: #4F81BD;
+}
+
+    .btn-outline-primary:hover {
+        color: #fff;
+        background-color: #086080;
+        border-color: #086080;
+    }
+
+a {
+    color: #4F81BD;
+}
+
+.container {
+    max-width: 1300px;
+}
+
+.sec-left, .sec-right{
+    width:600px;
+}
+
+.home-welcome{
+    margin-top:50px;
+}
+
+.select-right {
+    width: 200px;
+    float: right;
+    margin-right: 2px;
+    height:40px;
+}
+
+.btn-bottom-1 {
+    position: absolute;
+    top: 74px;
+    right: 615px;
+   
+}
+
+.btn-bottom-2 {
+    position: absolute;
+    top: 74px;
+    right: 477px;
+    
+    /*left: 1200px;*/
+}
+.col{
+    float:left !important;
+}
