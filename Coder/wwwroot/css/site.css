@@ -92,3 +92,7 @@ a {
 .col{
     float:left !important;
 }
+
+.form-group{
+    margin-top:8px;
+}

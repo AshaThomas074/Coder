@@ -11,5 +11,8 @@ namespace Coder.Data
         }
 
         public DbSet<User> users { get; set; }
+
+        public DbSet<QuestionDifficulty> QuestionDifficulty { get; set; }
+        public DbSet<Question> Question { get; set; }
     }
 }

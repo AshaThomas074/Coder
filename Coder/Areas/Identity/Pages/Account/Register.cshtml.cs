@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
@@ -170,6 +171,7 @@ namespace Coder.Areas.Identity.Pages.Account
                 user.UserExternalId = Input.UserExternalId;
                 user.CreatedOn= DateTime.Now;
                 user.UpdatedOn= DateTime.Now;
+                user.CreatedBy = User.FindFirstValue(ClaimTypes.NameIdentifier);//get the Id of loggined user
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
