@@ -1,48 +1,60 @@
 ﻿
 using Coder.Data;
 using Coder.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Security.Claims;
 
 namespace Coder.Controllers
 {
     public class QuestionController : Controller
     {
-        private readonly UserManager<IdentityUser>? _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly CoderDBContext _coderDBContext;
-        Question question = new Question();
-        public QuestionController(UserManager<IdentityUser> userManager,CoderDBContext coderDBContext)
+        
+        public QuestionController(UserManager<ApplicationUser> userManager,CoderDBContext coderDBContext)
         {
             _userManager = userManager;
             _coderDBContext = coderDBContext;
         }
 
+        [Authorize]
         // GET: QuestionController
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            
-            return View();
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
+            //var teacherId = user.CreatedBy;
+            var questions=await _coderDBContext.Question.Where(x => x.TeacherId == user.Id && x.Status == 1).ToListAsync(); //questions by teacherid for teacher
+            return View(questions);
         }
 
         // GET: QuestionController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var question = await _coderDBContext.Question.FirstOrDefaultAsync(m => m.QuestionId == id);
+            if (question == null)
+            {
+                return NotFound();
+            }
+            return View(question);
         }
 
         // GET: QuestionController/Create
         public ActionResult Create()
         {
-            question.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Question question = new Question();
+            question.TeacherId = _userManager.GetUserId(HttpContext.User);
             question.difficulties = _coderDBContext.QuestionDifficulty.Select(x => new SelectListItem
             {
                 Text = x.DifficultyName,
-                Value=x.DifficultyId.ToString()
-            }) ;
+                Value = x.DifficultyId.ToString()
+            });
             
             return View(question);
         }
@@ -50,12 +62,18 @@ namespace Coder.Controllers
         // POST: QuestionController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(Question question)
         {
             try
             {
                 if (ModelState.IsValid)
-                {
+                {                    
+                    question.CreatedOn = DateTime.Now;
+                    question.UpdatedOn = DateTime.Now;
+                    question.Status = 1;
+
+                    _coderDBContext.Question.Add(question);
+                    await _coderDBContext.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -72,43 +90,75 @@ namespace Coder.Controllers
         // GET: QuestionController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Question? question = _coderDBContext.Question.Where(X => X.QuestionId == id).FirstOrDefault();
+            if (question != null)
+            {
+                question.difficulties = _coderDBContext.QuestionDifficulty.Select(x => new SelectListItem
+                {
+                    Text = x.DifficultyName,
+                    Value = x.DifficultyId.ToString()
+                });
+            }
+            return View(question);
         }
 
         // POST: QuestionController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, Question question)
         {
-            try
+            if(id != question.QuestionId)
             {
+                return NotFound();
+            }
+
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        question.UpdatedOn = DateTime.Now;
+
+                        _coderDBContext.Question.Update(question);
+                        await _coderDBContext.SaveChangesAsync();                        
+                    }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!QuestionExists(question.QuestionId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(question);
+
         }
 
         // GET: QuestionController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            if (id > 0)
+            {
+               Question? question= _coderDBContext.Question.Where(x => x.QuestionId == id).FirstOrDefault();
+                if(question != null)
+                {
+                    question.Status = 0;
+                    question.UpdatedOn = DateTime.Now;
+
+                    _coderDBContext.Update(question);
+                    await _coderDBContext.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
-        // POST: QuestionController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        private bool QuestionExists(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return _coderDBContext.Question.Any(e => e.QuestionId == id);
         }
     }
 }

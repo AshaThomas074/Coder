@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,35 +11,34 @@ namespace Coder.Models
 
         [Required]
         [Display(Name="Question Heading")]
-        public string QuestionHeading { get; set; } = string.Empty;
+        public string? QuestionHeading { get; set; }
 
         [Required]
         [Display(Name ="Enter your question")]
-        public string QuestionText { get; set; }= string.Empty;
+        public string? QuestionText { get; set; }
 
-        [Required]
-        [Display(Name ="Input 1")]       
-        public string TestCaseInput1 { get; set; }= string.Empty;
+        [ValidateNever]
+        [Display(Name = "Input 1")]
+        public string TestCaseInput1 { get; set; } = string.Empty;
 
         [Required]
         [Display(Name = "Output 1")]
-        public string TestCaseOutput1 { get; set; } = string.Empty;
+        public string? TestCaseOutput1 { get; set; }
 
-        [Required]
+        [ValidateNever]
         [Display(Name ="Input 2")]
-        public string TestCaseInput2 { get; set;}= string.Empty;
+        public string? TestCaseInput2 { get; set;}
 
-        [Required]
         [Display(Name = "Output 2")]
-        public string TestCaseOutput2 { get; set; } = string.Empty;
-        [Display(Name ="Input 3")]
-        public string TestCaseInput3 { get; set;}= string.Empty;
+        public string? TestCaseOutput2 { get; set; }
+        [Display(Name = "Input 3")]
+        public string? TestCaseInput3 { get; set; }
         [Display(Name = "Output 3")]
-        public string TestCaseOutput3 { get; set;}=string.Empty;
+        public string? TestCaseOutput3 { get; set; }
 
         [Required]
         [Display(Name ="Initial Template")]
-        public string Answer { get; set; } = string.Empty;
+        public string? Answer { get; set; }
 
         [Required]
         [Display(Name = "Final Date")]
@@ -53,7 +51,7 @@ namespace Coder.Models
         public int Difficulty { get; set; }
         [Display(Name = "Started Count")]
         public int StartedCount { get; set; }
-        [Display(Name = "Processed Count")]
+        [Display(Name = "Processing Count")]
         public int ProcessedCount { get; set; }
         [Display(Name = "Completed Count")]
         public int CompletedCount { get; set; }

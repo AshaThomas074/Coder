@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Coder.Models.Question>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>List of Questions</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.QuestionHeading)
+            </th>
+            
+           
+            <th>
+                @Html.DisplayNameFor(model => model.FinalDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Score)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Difficulty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartedCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProcessedCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompletedCount)
+            </th>
+            
+           
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionHeading)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.FinalDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Score)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Difficulty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartedCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProcessedCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompletedCount)
+            </td>
+            
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.QuestionId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.QuestionId">Details</a> |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.QuestionId },
+                new { onclick = "return confirm('Are sure wants to delete?');" })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

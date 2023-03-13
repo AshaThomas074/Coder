@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Coder.Models.Contest>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>List of Contests</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ContestName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FinalDate)
+            </th>   
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContestName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FinalDate)
+            </td>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ContestId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ContestId">Details</a> |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ContestId },
+                new { onclick = "return confirm('Are sure wants to delete?');" })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

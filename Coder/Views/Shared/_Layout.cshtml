@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 
-@inject SignInManager<IdentityUser> SignInManager
+@inject SignInManager<ApplicationUser> SignInManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Coder.styles.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <header>
@@ -39,7 +41,10 @@
                                     <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Add Student</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" id="question" asp-controller="Question" asp-action="Create">Question</a>
+                                    <a class="nav-link text-dark" id="contest" asp-controller="Contests" asp-action="Index">Contest</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" id="question" asp-controller="Question" asp-action="Index">Question</a>
                                 </li>
                             }
                            
@@ -64,8 +69,7 @@
             &copy; 2023 - Coder - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

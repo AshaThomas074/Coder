@@ -1,6 +1,7 @@
 using Coder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Coder.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +12,16 @@ builder.Services.AddDbContext<CoderDBContext>(opt =>
 opt.UseSqlServer(builder.Configuration.GetConnectionString("CoderConn")));
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-   // .AddEntityFrameworkStores<CoderDBContext>();
-builder.Services.AddDefaultIdentity<IdentityUser>()
+// .AddEntityFrameworkStores<CoderDBContext>();
+/*builder.Services.AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<CoderDBContext>();
+                .AddEntityFrameworkStores<CoderDBContext>();*/
+
+builder.Services.AddDefaultIdentity<ApplicationUser>()
+           .AddRoles<IdentityRole>()
+           .AddEntityFrameworkStores<CoderDBContext>();
+          
+           
 
 var app = builder.Build();
 
@@ -37,7 +44,8 @@ app.UseRouting();
 app.UseAuthentication();;
 app.UseAuthorization();
 
-app.MapRazorPages();
+app.UseEndpoints(endpoints => endpoints.MapRazorPages());
+//app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",

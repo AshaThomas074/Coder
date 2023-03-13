@@ -1,9 +1,10 @@
 ﻿@model Coder.Models.Question
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <style type="text/css" media="screen">
     #editor {
         position: absolute;
@@ -14,25 +15,27 @@
         height: 315px;
     }
 
-    div.mce-edit-area{
+    div.mce-edit-area {
         height: 200px !important;
     }
 
-    div.mce-edit-area>iframe{
+        div.mce-edit-area > iframe {
             height: 200px !important;
-    }
+        }
 
-    .btn-right{ float:right !important;}
+    .btn-right {
+        float: right !important;
+    }
 
 </style>
 
-<form asp-action="Create">
-<div class="row">
-    <div class="col-md-6">
-        <h2>Create Question</h2>
-        <hr />
+<form asp-action="Edit">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Edit Question</h2>
+            <hr />
         </div>
-        </div>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -41,16 +44,16 @@
                 <input asp-for="QuestionHeading" class="form-control" />
                 <span asp-validation-for="QuestionHeading" class="text-danger"></span>
             </div>
-            </div>
-            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 <label asp-for="QuestionText" class="control-label"></label>
-                <textarea id="txtAreaQuestion" asp-for="QuestionText" class="form-control" ></textarea>
+                <textarea id="txtAreaQuestion" asp-for="QuestionText" class="form-control"></textarea>
                 <span asp-validation-for="QuestionText" class="text-danger"></span>
             </div>
-            </div>
+        </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label asp-for="Answer" class="control-label"></label>
@@ -58,27 +61,27 @@
                 <!--<input asp-for="Answer" class="form-control" />-->
                 <span asp-validation-for="Answer" class="text-danger"></span>
             </div>
-    </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 <label asp-for="TestCaseInput1" class="control-label"></label>
-                <textarea asp-for="TestCaseInput1" class="form-control" ></textarea>                
-            </div>
-            
-            <div class="form-group">
-                <label asp-for="TestCaseInput2" class="control-label"></label>
-                <textarea asp-for="TestCaseInput2" class="form-control" ></textarea>                
-            </div>
-            
-            <div class="form-group">
-                <label asp-for="TestCaseInput3" class="control-label"></label>
-                <textarea asp-for="TestCaseInput3" class="form-control" ></textarea>                
+                <textarea asp-for="TestCaseInput1" class="form-control"></textarea>
             </div>
 
-           
-           
+            <div class="form-group">
+                <label asp-for="TestCaseInput2" class="control-label"></label>
+                <textarea asp-for="TestCaseInput2" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TestCaseInput3" class="control-label"></label>
+                <textarea asp-for="TestCaseInput3" class="form-control"></textarea>
+            </div>
+
+
+
         </div>
         <div class="col-md-6">
             <div class="form-group">
@@ -88,14 +91,14 @@
             </div>
             <div class="form-group">
                 <label asp-for="TestCaseOutput2" class="control-label"></label>
-                <textarea asp-for="TestCaseOutput2" class="form-control"></textarea>               
+                <textarea asp-for="TestCaseOutput2" class="form-control"></textarea>
             </div>
             <div class="form-group">
                 <label asp-for="TestCaseOutput3" class="control-label"></label>
-                <textarea asp-for="TestCaseOutput3" class="form-control"></textarea>                
+                <textarea asp-for="TestCaseOutput3" class="form-control"></textarea>
             </div>
-            </div>
-            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
@@ -103,7 +106,7 @@
                 <input asp-for="FinalDate" class="form-control" />
                 <span asp-validation-for="FinalDate" class="text-danger"></span>
             </div>
-            </div>
+        </div>
         <div class="col-md-4">
             <div class="form-group">
                 <label asp-for="Difficulty" class="control-label"></label>
@@ -113,27 +116,31 @@
                 <!--<input asp-for="Difficulty" class="form-control" />-->
                 <span asp-validation-for="Difficulty" class="text-danger"></span>
             </div>
-            </div>
-    <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
             <div class="form-group">
                 <label asp-for="Score" class="control-label"></label>
                 <input asp-for="Score" class="form-control" />
                 <span asp-validation-for="Score" class="text-danger"></span>
             </div>
-            
-            </div>
-          
-           </div>
+
+        </div>
+
+    </div>
     <div class="row">
         <div class="col">
             <div class="form-group btn-right">
-                <input type="submit" value="Create" id="btnSubmit" class="btn btn-primary" />
+                <input type="submit" value="Save" id="btnSubmit" class="btn btn-primary" />
             </div>
-       
-    </div>
+
+        </div>
     </div>
     <input type="hidden" asp-for="TeacherId" />
     <input type="hidden" id="hdnAnswer" asp-for="Answer" />
+    <input type="hidden" asp-for="QuestionId" />
+    <input type="hidden" asp-for="Status" />
+    <input type="hidden" asp-for="CreatedOn" />
+    <input type="hidden" asp-for="UpdatedOn" />
 </form>
 <div>
     <a asp-action="Index">Back to List</a>
@@ -147,3 +154,6 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+
+
