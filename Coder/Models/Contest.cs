@@ -9,12 +9,15 @@ namespace Coder.Models
         [Display(Name ="Contest Name")]
         public string? ContestName { get; set;}
         [Display(Name ="Final Date")]
-        public DateTime FinalDate { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public DateTime UpdatedOn { get; set;}
-        public string? TeacherId { get; set; }
+        public DateTime FinalDate { get; set; } = DateTime.Now;
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
+        public DateTime UpdatedOn { get; set; } = DateTime.Now;
+
+        [ForeignKey("Id")]
+        public string? UserId { get; set; }
+        public ApplicationUser User { get; set; }
         public int Status { get; set; }
-        [NotMapped]
-        public ICollection<Question>? QuestionsList { get; set; }
+        public ICollection<QuestionContestMap> QuestionContestMaps { get; set; }
+
     }
 }

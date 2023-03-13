@@ -125,13 +125,15 @@ namespace Coder.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("TeacherId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("ContestId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Contest");
                 });
@@ -182,9 +184,6 @@ namespace Coder.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("TeacherId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("TestCaseInput1")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -208,9 +207,60 @@ namespace Coder.Migrations
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("QuestionId");
 
+                    b.HasIndex("Difficulty");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("Question");
+                });
+
+            modelBuilder.Entity("Coder.Models.QuestionContestMap", b =>
+                {
+                    b.Property<int>("QuestionContestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionContestId"));
+
+                    b.Property<int>("CompletedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ContestId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProcessingCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StartedCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("QuestionContestId");
+
+                    b.HasIndex("ContestId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("QuestionContestMap");
                 });
 
             modelBuilder.Entity("Coder.Models.QuestionDifficulty", b =>
@@ -367,6 +417,59 @@ namespace Coder.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Coder.Models.Contest", b =>
+                {
+                    b.HasOne("Coder.Models.ApplicationUser", "User")
+                        .WithMany("Contests")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Coder.Models.Question", b =>
+                {
+                    b.HasOne("Coder.Models.QuestionDifficulty", "QuestionDifficulty")
+                        .WithMany("Questions")
+                        .HasForeignKey("Difficulty")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Coder.Models.ApplicationUser", "User")
+                        .WithMany("Questions")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("QuestionDifficulty");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Coder.Models.QuestionContestMap", b =>
+                {
+                    b.HasOne("Coder.Models.Contest", "Contest")
+                        .WithMany("QuestionContestMaps")
+                        .HasForeignKey("ContestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Coder.Models.Question", "Questions")
+                        .WithMany("QuestionContestMaps")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Coder.Models.ApplicationUser", "User")
+                        .WithMany("ContestMaps")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contest");
+
+                    b.Navigation("Questions");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -416,6 +519,30 @@ namespace Coder.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Coder.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("ContestMaps");
+
+                    b.Navigation("Contests");
+
+                    b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("Coder.Models.Contest", b =>
+                {
+                    b.Navigation("QuestionContestMaps");
+                });
+
+            modelBuilder.Entity("Coder.Models.Question", b =>
+                {
+                    b.Navigation("QuestionContestMaps");
+                });
+
+            modelBuilder.Entity("Coder.Models.QuestionDifficulty", b =>
+                {
+                    b.Navigation("Questions");
                 });
 #pragma warning restore 612, 618
         }

@@ -30,7 +30,7 @@ namespace Coder.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
             //var teacherId = user.CreatedBy;
-            var questions=await _coderDBContext.Question.Where(x => x.TeacherId == user.Id && x.Status == 1).ToListAsync(); //questions by teacherid for teacher
+            var questions=await _coderDBContext.Question.Where(x => x.UserId == user.Id && x.Status == 1).ToListAsync(); //questions by teacherid for teacher
             return View(questions);
         }
 
@@ -49,7 +49,7 @@ namespace Coder.Controllers
         public ActionResult Create()
         {
             Question question = new Question();
-            question.TeacherId = _userManager.GetUserId(HttpContext.User);
+            question.UserId = _userManager.GetUserId(HttpContext.User);
             question.difficulties = _coderDBContext.QuestionDifficulty.Select(x => new SelectListItem
             {
                 Text = x.DifficultyName,

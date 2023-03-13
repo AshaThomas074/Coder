@@ -26,7 +26,7 @@ namespace Coder.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
-            return View(await _context.Contest.Where(x=>x.TeacherId == userId && x.Status == 1).ToListAsync());
+            return View(await _context.Contest.Where(x=>x.UserId == userId).ToListAsync());
         }
 
         // GET: Contests/Details/5
@@ -50,7 +50,7 @@ namespace Coder.Controllers
         public IActionResult Create()
         {
             Contest contest = new Contest();
-            contest.TeacherId= _userManager.GetUserId(HttpContext.User);
+            contest.UserId= _userManager.GetUserId(HttpContext.User);
             return View(contest);
         }
 
@@ -131,10 +131,8 @@ namespace Coder.Controllers
 
             var contest = await _context.Contest.FindAsync(id);
             if (contest != null)
-            {
-                contest.Status = 0;
-                contest.UpdatedOn = DateTime.Now;
-                _context.Contest.Update(contest);
+            {                
+                _context.Contest.Remove(contest);
             }
 
             await _context.SaveChangesAsync();

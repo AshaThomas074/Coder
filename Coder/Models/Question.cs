@@ -47,21 +47,28 @@ namespace Coder.Models
         public float? Score { get; set; }
 
         [Required]
-        [ForeignKey("QuestionDifficulty")]
+        [Display(Name = "Difficulty")]
+
+        [ForeignKey(nameof(QuestionDifficulty))]
         public int Difficulty { get; set; }
+        public QuestionDifficulty QuestionDifficulty { get; set; }
+
         [Display(Name = "Started Count")]
         public int StartedCount { get; set; }
         [Display(Name = "Processing Count")]
         public int ProcessedCount { get; set; }
         [Display(Name = "Completed Count")]
         public int CompletedCount { get; set; }
-        public string? TeacherId { get; set; }
+
+        [ForeignKey("Id")]
+        public string? UserId { get; set; }
+        public ApplicationUser User { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; } = DateTime.Now;
         public int Status { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem>? difficulties { get; set; }
         
-
+        public ICollection<QuestionContestMap> QuestionContestMaps { get; set; }
     }
 }
