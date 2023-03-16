@@ -31,6 +31,7 @@ namespace Coder.Models
 
         [Display(Name = "Output 2")]
         public string? TestCaseOutput2 { get; set; }
+
         [Display(Name = "Input 3")]
         public string? TestCaseInput3 { get; set; }
         [Display(Name = "Output 3")]
@@ -51,7 +52,7 @@ namespace Coder.Models
 
         [ForeignKey(nameof(QuestionDifficulty))]
         public int Difficulty { get; set; }
-        public QuestionDifficulty QuestionDifficulty { get; set; }
+        public QuestionDifficulty? QuestionDifficulty { get; set; }
 
         [Display(Name = "Started Count")]
         public int StartedCount { get; set; }
@@ -62,13 +63,13 @@ namespace Coder.Models
 
         [ForeignKey("Id")]
         public string? UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public ApplicationUser? User { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; } = DateTime.Now;
         public int Status { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem>? difficulties { get; set; }
         
-        public ICollection<QuestionContestMap> QuestionContestMaps { get; set; }
+        public ICollection<QuestionContestMap>? QuestionContestMaps { get; set; }
     }
 }

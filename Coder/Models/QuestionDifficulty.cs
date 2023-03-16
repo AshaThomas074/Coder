@@ -8,6 +8,6 @@ namespace Coder.Models
         [Key]
         public int DifficultyId { get; set; }
         public string DifficultyName { get; set; } = string.Empty;
-        public ICollection<Question> Questions { get; set; }
+        public ICollection<Question>? Questions { get; set; }
     }
 }
