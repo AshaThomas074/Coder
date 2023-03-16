@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Coder.Data;
 using Coder.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 
 namespace Coder.Controllers
 {
@@ -36,9 +37,37 @@ namespace Coder.Controllers
             {
                 return NotFound();
             }
+            var userId = _userManager.GetUserId(HttpContext.User);
 
             var contest = await _context.Contest.FirstOrDefaultAsync(m => m.ContestId == id);
-            if (contest == null)
+            if(contest != null)
+            { 
+                var param = new SqlParameter[] {
+                        new SqlParameter() {
+                            ParameterName = "@UserId",
+                            SqlDbType =  System.Data.SqlDbType.VarChar,
+                            Size = 100,
+                            Direction = System.Data.ParameterDirection.Input,
+                            Value = userId
+                        },
+                        new SqlParameter() {
+                            ParameterName = "@ContestId",
+                            SqlDbType =  System.Data.SqlDbType.Int,
+                            Direction = System.Data.ParameterDirection.Input,
+                            Value = id
+                        }};
+                List<Question> questionList = _context.Question.FromSqlRaw("[dbo].[GetQuestionsNotMapped] @UserId, @ContestId", param).ToList();
+
+                contest.questionsDDL = questionList.Select(x => new SelectListItem()
+                {
+                    Text = x.QuestionHeading,
+                    Value = x.QuestionId.ToString()
+                });
+
+                contest.questionList = _context.Question.FromSqlRaw("[dbo].[GetQuestionsMapped] @UserId, @ContestId", param).ToList();
+                //contest.QuestionContestMaps = (ICollection<QuestionContestMap>)x.ToList();
+            }
+            else
             {
                 return NotFound();
             }
@@ -137,6 +166,31 @@ namespace Coder.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));            
+        }
+
+        public async Task<IActionResult> MapQuestionToContest(QuestionContestMap questionContestMap)
+        {
+            questionContestMap.CreatedOn= DateTime.Now;
+            questionContestMap.UpdatedOn= DateTime.Now;
+            questionContestMap.UserId= _userManager.GetUserId(HttpContext.User);
+            _context.QuestionContestMap.Add(questionContestMap);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details",new { id = questionContestMap.ContestId });
+
+        }
+
+        public async Task<IActionResult> DeleteMaping(int Cid,int Qid)
+        {
+            var userid = _userManager.GetUserId(HttpContext.User);
+            var questioncontestmap = await _context.QuestionContestMap.
+                Where(x => x.ContestId == Cid && x.QuestionId == Qid && x.UserId == userid).
+                FirstOrDefaultAsync();
+            if (questioncontestmap != null)
+            {
+                _context.QuestionContestMap.Remove(questioncontestmap);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Details", new { id = Cid });
         }
 
         private bool ContestExists(int id)
