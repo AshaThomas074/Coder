@@ -4,6 +4,7 @@ using Coder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coder.Migrations
 {
     [DbContext(typeof(CoderDBContext))]
-    partial class CoderDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230314184302_updates")]
+    partial class updates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,7 +138,7 @@ namespace Coder.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Contest", (string)null);
+                    b.ToTable("Contest");
                 });
 
             modelBuilder.Entity("Coder.Models.Question", b =>
@@ -216,7 +219,7 @@ namespace Coder.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Question", (string)null);
+                    b.ToTable("Question");
                 });
 
             modelBuilder.Entity("Coder.Models.QuestionContestMap", b =>
@@ -259,7 +262,7 @@ namespace Coder.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuestionContestMap", (string)null);
+                    b.ToTable("QuestionContestMap");
                 });
 
             modelBuilder.Entity("Coder.Models.QuestionDifficulty", b =>
@@ -276,7 +279,7 @@ namespace Coder.Migrations
 
                     b.HasKey("DifficultyId");
 
-                    b.ToTable("QuestionDifficulty", (string)null);
+                    b.ToTable("QuestionDifficulty");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
