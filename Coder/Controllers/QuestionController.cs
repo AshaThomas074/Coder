@@ -27,11 +27,19 @@ namespace Coder.Controllers
         // GET: QuestionController
         public async Task<IActionResult> Index()
         {
-            var userId = _userManager.GetUserId(HttpContext.User);
-            ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
-            //var teacherId = user.CreatedBy;
-            var questions=await _coderDBContext.Question.Where(x => x.UserId == user.Id && x.Status == 1).ToListAsync(); //questions by teacherid for teacher
-            return View(questions);
+            try
+            {
+                var userId = _userManager.GetUserId(HttpContext.User);
+                ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
+                //var teacherId = user.CreatedBy;
+                var questions=await _coderDBContext.Question.Where(x => x.UserId == userId && x.Status == 1).ToListAsync(); //questions by teacherid for teacher
+               // var questions = await _coderDBContext.Question.ToListAsync(); //questions by teacherid for teacher
+                return View(questions);
+            }
+            catch (Exception )
+            {
+                return View();
+            }
         }
 
         // GET: QuestionController/Details/5
@@ -76,14 +84,22 @@ namespace Coder.Controllers
                     await _coderDBContext.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-                else
+                //var errors = ModelState.Values.SelectMany(v => v.Errors);
+                question.difficulties = _coderDBContext.QuestionDifficulty.Select(x => new SelectListItem
                 {
-                    return View();
-                }
+                    Text = x.DifficultyName,
+                    Value = x.DifficultyId.ToString()
+                });
+                return View(question);                
             }
             catch
             {
-                return View();
+                question.difficulties = _coderDBContext.QuestionDifficulty.Select(x => new SelectListItem
+                {
+                    Text = x.DifficultyName,
+                    Value = x.DifficultyId.ToString()
+                });
+                return View(question);
             }
         }
 
