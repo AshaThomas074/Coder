@@ -22,15 +22,17 @@ namespace Coder.Models
         [ForeignKey("Id")]
         public string? UserId { get; set; }
         public ApplicationUser? User { get; set; }
-        public int Status { get; set; }
+        public int? Status { get; set; }   
+        public int? PublishedStatus { get; set; }    
         public ICollection<QuestionContestMap>? QuestionContestMaps { get; set; }
         [NotMapped]
-        [Required]
+       
         public QuestionContestMap? QuestionContestMap { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem>? questionsDDL { get; set; }
         [NotMapped]
         public IEnumerable<Question>? questionList { get; set; }
+        public ICollection<StudentContestMap>? StudentContestMaps { get; set; }
 
     }
 }

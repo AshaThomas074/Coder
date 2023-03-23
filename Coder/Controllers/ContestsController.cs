@@ -9,6 +9,7 @@ using Coder.Data;
 using Coder.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
+using Coder.Migrations;
 
 namespace Coder.Controllers
 {
@@ -16,18 +17,20 @@ namespace Coder.Controllers
     {
         private readonly CoderDBContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public ContestsController(CoderDBContext context, UserManager<ApplicationUser> userManager)
+        public ContestsController(CoderDBContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         // GET: Contests
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
-            return View(await _context.Contest.Where(x=>x.UserId == userId).ToListAsync());
+            return View(await _context.Contest.Where(x=>x.UserId == userId).OrderByDescending(y=>y.Status).ToListAsync());
         }
 
         // GET: Contests/Details/5
@@ -65,7 +68,6 @@ namespace Coder.Controllers
                 });
 
                 contest.questionList = _context.Question.FromSqlRaw("[dbo].[GetQuestionsMapped] @UserId, @ContestId", param).ToList();
-                //contest.QuestionContestMaps = (ICollection<QuestionContestMap>)x.ToList();
             }
             else
             {
@@ -93,6 +95,7 @@ namespace Coder.Controllers
                 contest.CreatedOn= DateTime.Now;
                 contest.UpdatedOn= DateTime.Now;
                 contest.Status = 1;
+                contest.PublishedStatus = 0;
                 _context.Add(contest);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -150,6 +153,7 @@ namespace Coder.Controllers
             return View(contest);
         }
 
+        //delete contests
         // GET: Contests/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -179,7 +183,8 @@ namespace Coder.Controllers
 
         }
 
-        public async Task<IActionResult> DeleteMaping(int Cid,int Qid)
+
+        public async Task<IActionResult> DeleteQuestionContestMaping(int Cid,int Qid)
         {
             var userid = _userManager.GetUserId(HttpContext.User);
             var questioncontestmap = await _context.QuestionContestMap.
@@ -191,6 +196,84 @@ namespace Coder.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction("Details", new { id = Cid });
+        }
+
+        public async Task<IActionResult> GetMappedStudents(int? id)
+        {
+            ContestViewModel contestViewModel = new ContestViewModel();
+            contestViewModel.ddlStudentBatches = _context.StudentBatch.Select(x => new SelectListItem
+            {
+                Text = x.StudentBatchName,
+                Value = x.StudentBatchId.ToString()
+            });
+
+            //Gel all students who are not mapped to contest
+            var loggedinId=_userManager.GetUserId(HttpContext.User);
+            var allusers = await _userManager.GetUsersInRoleAsync("Student");
+            var students = allusers.Where(x => x.CreatedBy == loggedinId).ToList();
+
+            var result = (from a in students
+                          where !(from b in _context.StudentContestMap
+                                  where b.ContestId == id
+                                  select b.UserId)
+                                 .Contains(a.Id)
+                          select new SelectListItem()
+                          {
+                              Text = a.UserExternalId + " " + a.FirstName + " " + a.LastName,
+                              Value = a.Id
+                          });
+
+            contestViewModel.ddlStudents = result;
+           
+            //Get all mapped students
+            contestViewModel.StudentsList = (from a in _context.StudentContestMap
+                                             where a.ContestId == id
+                                             select new StudentContestMap()
+                                             {
+                                                 StudentContestId = a.StudentContestId,
+                                                 FirstName = a.User != null ? a.User.FirstName : "",
+                                                 LastName = a.User != null ? a.User.LastName : "",
+                                                 UserExternalId = a.User != null ? a.User.UserExternalId : ""
+                                             });
+
+            contestViewModel.StudentContestMap = new StudentContestMap();
+            contestViewModel.StudentContestMap.ContestId= id;
+
+            return View("StudentsMap",contestViewModel);
+        }
+        public async Task<IActionResult> MapStudentToContest(ContestViewModel viewModel)
+        {
+            int? contestid = null;
+            if (viewModel != null && viewModel.StudentContestMap != null)
+            {
+                contestid = viewModel.StudentContestMap.ContestId;
+                if (viewModel.StudentBatchId != null && viewModel.StudentBatchId != 0) 
+                {
+                    await _context.Database.ExecuteSqlAsync($"InsertStudentContestMapByBranchId @ContestId={contestid},@BatchId={viewModel.StudentBatchId}");
+                }
+                else if (viewModel.StudentContestMap.UserId != null)
+                {
+                    
+                    viewModel.StudentContestMap.CreatedOn = DateTime.Now;
+                    viewModel.StudentContestMap.UpdatedOn = DateTime.Now;
+
+                    _context.StudentContestMap.Add(viewModel.StudentContestMap);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            
+            return RedirectToAction("GetMappedStudents", new { id = contestid });
+        }
+
+        public async Task<IActionResult> DeleteStudentContestMaping(int id, int cid)
+        {
+            var result=await _context.StudentContestMap.FindAsync(id);
+            if(result != null)
+            {
+                _context.StudentContestMap.Remove(result);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("GetMappedStudents", new { id = cid });
         }
 
         private bool ContestExists(int id)

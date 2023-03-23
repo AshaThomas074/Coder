@@ -5,8 +5,34 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     Model.QuestionContestMap = new QuestionContestMap();
 }
+<style>
+    .div-wid-5{
+        width:100%;
+        float:left;
+       
+    }
 
-<div>
+    .div-pad {
+        padding-top: 10px;
+        padding-left: 700px;
+    }
+
+    .row{
+        width: 100%;
+    }
+
+    .col-sm-2 {
+        flex: 0 0 auto;
+        width: 25%;
+    }
+
+    .col-sm-10 {
+        flex: 0 0 auto;
+        width: 75%;
+    }
+
+</style>
+<div class="div-wid-5">
     <h2>Contest Details</h2>
     <hr />
     <dl class="row">
@@ -24,27 +50,38 @@
         </dd>        
     </dl>
 </div>
+<div class="div-wid-5 div-pad">
+    <a asp-action="GetMappedStudents" asp-route-id="@Model.ContestId">Click here to Map Student</a>
+</div>
 <div>
-<hr />
+<hr/>
 <h4>Map Questions</h4>
 
     <form asp-action="MapQuestionToContest">
-<dl class="row">
-    <dt class="col-sm-2">
-        Select Question
-    </dt>
-    <dd class="col-sm-4">
+    <table style="width:45%">
+        <tr>
+            <td class="col-sm-10">
+                <select id="ddlQuestion" class="form-select" asp-for="@Model.QuestionContestMap.QuestionId" asp-items="Model.questionsDDL">
+                    <option value="">Select Question</option>
+                </select>
+                <span id="spnValid" asp-validation-for="@Model.QuestionContestMap.QuestionId" class="text-danger">
+                    The Difficulty field is required.
+                </span>
+            </td>
+            <td class="col-sm-2">
+                    <input type="submit" id="btnContestSubmit" value="Save" class="btn btn-primary" style="margin-left: 15px;" />
+            </td>
+            </tr>
+
+  <!--  <dd class="col-sm-4">
                 <select id="ddlQuestion" class="form-select" asp-for="@Model.QuestionContestMap.QuestionId" asp-items="Model.questionsDDL">
             <option value="">Select Question</option>
         </select>
                 <span id="spnValid" asp-validation-for="@Model.QuestionContestMap.QuestionId" class="text-danger">
                     The Difficulty field is required.
                 </span>
-    </dd>
-</dl>
-    <div class="form-group">
-            <input type="submit" id="btnContestSubmit" value="Save" class="btn btn-primary" />
-    </div>
+    </dd> -->
+</table>
     <input type="hidden" asp-for="@Model.QuestionContestMap.ContestId" value="@Model.ContestId" />
     </form>
 </div>
@@ -78,7 +115,7 @@
                         @Html.DisplayFor(modelItem => item.Score)
                     </td>
                     <td>                        
-                        @Html.ActionLink("Delete", "DeleteMaping", new { Qid = item.QuestionId,Cid=Model.ContestId },
+                        @Html.ActionLink("Delete", "DeleteQuestionContestMaping", new { Qid = item.QuestionId,Cid=Model.ContestId },
                     new { onclick = "return confirm('Are sure wants to delete?');" })
                     </td>
                 </tr>
@@ -92,6 +129,3 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-<script>
-
-</script>
