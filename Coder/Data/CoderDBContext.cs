@@ -15,5 +15,7 @@ namespace Coder.Data
         public DbSet<Question> Question { get; set; }
         public DbSet<Contest> Contest { get; set; }
         public DbSet<QuestionContestMap> QuestionContestMap { get; set; }
+        public DbSet<StudentBatch> StudentBatch { get; set; }
+        public DbSet<StudentContestMap> StudentContestMap { get; set;}
     }
 }

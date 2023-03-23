@@ -4,6 +4,7 @@ using Coder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coder.Migrations
 {
     [DbContext(typeof(CoderDBContext))]
-    partial class CoderDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230319153756_student batch")]
+    partial class studentbatch
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,9 +130,6 @@ namespace Coder.Migrations
 
                     b.Property<DateTime>("FinalDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("PublishedStatus")
-                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -305,47 +305,6 @@ namespace Coder.Migrations
                     b.HasKey("StudentBatchId");
 
                     b.ToTable("StudentBatch");
-                });
-
-            modelBuilder.Entity("Coder.Models.StudentContestMap", b =>
-                {
-                    b.Property<int>("StudentContestId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentContestId"));
-
-                    b.Property<int>("ContestId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("QuestionsAttended")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<double?>("TotalEarnedScore")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("TotalQuestions")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("StudentContestId");
-
-                    b.HasIndex("ContestId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("StudentContestMap");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -545,23 +504,6 @@ namespace Coder.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Coder.Models.StudentContestMap", b =>
-                {
-                    b.HasOne("Coder.Models.Contest", "Contest")
-                        .WithMany("StudentContestMaps")
-                        .HasForeignKey("ContestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Coder.Models.ApplicationUser", "User")
-                        .WithMany("StudentContestMaps")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Contest");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -620,15 +562,11 @@ namespace Coder.Migrations
                     b.Navigation("Contests");
 
                     b.Navigation("Questions");
-
-                    b.Navigation("StudentContestMaps");
                 });
 
             modelBuilder.Entity("Coder.Models.Contest", b =>
                 {
                     b.Navigation("QuestionContestMaps");
-
-                    b.Navigation("StudentContestMaps");
                 });
 
             modelBuilder.Entity("Coder.Models.Question", b =>
