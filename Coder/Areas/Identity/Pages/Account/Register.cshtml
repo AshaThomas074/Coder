@@ -43,11 +43,20 @@
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="form-floating">
-                <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select" aria-required="true" >
+                <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" id="ddlRole" class="form-select" aria-required="true" >
                     <option disabled selected>Select Role</option>
-                </select>               
+                </select>        
+                <label asp-for="Input.Role"></label>
                 <span asp-validation-for="Input.Role" class="text-danger"></span>
             </div>
+
+                    <div class="form-floating" id="divBatch">
+                        <select asp-for="Input.StudentBatchId" asp-items="@Model.Input.StudentBatchList" id="ddlBatch" class="form-select" aria-required="true">
+                            <option disabled selected>Select Batch</option>
+                        </select>
+                <label asp-for="Input.StudentBatchId">Batch</label>
+                        <span asp-validation-for="Input.StudentBatchId" class="text-danger"></span>
+                    </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
@@ -57,3 +66,4 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+

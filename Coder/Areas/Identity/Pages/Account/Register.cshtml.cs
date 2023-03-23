@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using Coder.Data;
 using Coder.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -22,6 +23,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Coder.Areas.Identity.Pages.Account
 {
@@ -34,6 +36,7 @@ namespace Coder.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly CoderDBContext _coderDBContest;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -41,7 +44,7 @@ namespace Coder.Areas.Identity.Pages.Account
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager, CoderDBContext coderDBContext)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -50,6 +53,7 @@ namespace Coder.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _coderDBContest=coderDBContext;
         }
 
         /// <summary>
@@ -122,6 +126,11 @@ namespace Coder.Areas.Identity.Pages.Account
 
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
+            [Required]
+            public int? StudentBatchId { get; set; }
+
+            [ValidateNever]
+            public IEnumerable<SelectListItem> StudentBatchList { get; set; }
         }
 
 
@@ -130,7 +139,7 @@ namespace Coder.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            if(_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+            if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
             {
                 Input = new InputModel()
                 {
@@ -152,9 +161,16 @@ namespace Coder.Areas.Identity.Pages.Account
                     })
                 };
             }
-                   
-        }
 
+            Input.StudentBatchList = _coderDBContest.StudentBatch.Select(x => new SelectListItem
+            {
+                Text = x.StudentBatchName,
+                Value = x.StudentBatchId.ToString()
+            });
+
+
+        }
+        
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -169,6 +185,7 @@ namespace Coder.Areas.Identity.Pages.Account
                 user.FirstName= Input.FirstName;
                 user.LastName= Input.LastName;
                 user.UserExternalId = Input.UserExternalId;
+                user.StudentBatchId= Input.StudentBatchId;
                 user.CreatedOn= DateTime.Now;
                 user.UpdatedOn= DateTime.Now;
                 user.CreatedBy = User.FindFirstValue(ClaimTypes.NameIdentifier);//get the Id of loggined user
