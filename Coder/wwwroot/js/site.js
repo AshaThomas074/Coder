@@ -4,6 +4,9 @@
 // Write your JavaScript code.
 
 $(document).ready(function () {
+
+    //code for contest start
+
     $("#spnValid").hide();
 
     $("#btnContestSubmit").on("click", function () {
@@ -29,5 +32,23 @@ $(document).ready(function () {
         }
     });
 
+    //code for contest ends
+
+    $("#divBatch").hide();
+
+    $("#ddlRole").on("change", function () {
+        if ($("#ddlRole option:selected").text() == "Student") {
+            $("#divBatch").show();
+        }
     
+         });
+
+    $("#registerSubmit").on("click", function () {
+        if ($("#ddlRole option:selected").text() == "Student") {
+            if ($("#ddlBatch").val() == "") {
+                return false;
+            }
+        }
+    });
+
 });
