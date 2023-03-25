@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<CoderDBContext>(opt =>
-opt.UseSqlServer(builder.Configuration.GetConnectionString("CoderConn")));
+opt.UseSqlServer(builder.Configuration.GetConnectionString("CoderConn")),ServiceLifetime.Transient);
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 // .AddEntityFrameworkStores<CoderDBContext>();

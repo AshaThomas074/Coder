@@ -77,15 +77,14 @@ a {
 
 .btn-bottom-1 {
     position: absolute;
-    top: 74px;
-    right: 615px;
-   
+    top: 102px;
+    right: 600px;   
 }
 
 .btn-bottom-2 {
     position: absolute;
-    top: 74px;
-    right: 477px;
+    top: 102px;
+    right: 462px;
     
     /*left: 1200px;*/
 }

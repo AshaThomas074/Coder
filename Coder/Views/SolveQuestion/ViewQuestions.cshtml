@@ -1,0 +1,33 @@
+﻿@model IList<Coder.Models.QuestionViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Questions</h2>
+<hr />
+<br />
+<div>
+    @if (Model != null && Model.Count() > 0)
+    {
+        var count = 1;
+        @foreach (var item in Model)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:50%"> <h5>@(count++): @item.QuestionHeading</h5></td>
+                            <td style="width:20%">Difficulty: @item.Difficulty </td>
+                            <td style="width:15%">Score: @item.Score </td>
+                            <td style="width:15%"> <a asp-action="LoadSolveChallengePage" asp-route-id="@item.QuestionId" class="btn btn-primary">Solve Challenge</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+
+   
+</div>

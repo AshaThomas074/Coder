@@ -1,4 +1,4 @@
-﻿
+﻿@model Coder.Models.Question
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,11 +6,17 @@
 <style type="text/css" media="screen">
     #editor {
         position: absolute;
-        top: 137px;
-        right: 46px;
+        top: 162px;
+        right: 39px;
         bottom: 139px;
         left: 695px;
-        height:400px;
+        height: 400px;
+    }
+
+    .div-input-output{
+        width: 608px;
+        background-color: lightgray;
+        padding: 10px;
     }
 </style>
 
@@ -18,13 +24,28 @@
     <div class="col">
         <section>
             
-                <h4>question heading</h4>
+                <h4>@Model.QuestionHeading</h4>
                 <hr />
                 
-                <div class="sec-left">
-                   <p>Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
+                <div class="sec-left">                   
+                    
+                   <p>@Html.Raw(Model.QuestionText)
                    </p>
-                </div>
+                @if (!string.IsNullOrEmpty(Model.TestCaseInput1))
+                {
+                    <h5>Sample Input</h5>
+                    <div class="div-input-output">
+                        <span style="white-space: pre-line">@Model.TestCaseInput1</span>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Model.TestCaseOutput1))
+                {
+                    <h5>Sample Output</h5>
+                    <div class="div-input-output">
+                        <span style="white-space: pre-line">@Model.TestCaseOutput1</span>
+                    </div>
+                }
+            </div>
         <!--   <div id="runresult">
                 <h5>Test result</h5>
                 <p>
@@ -60,17 +81,9 @@
                     </select>        
                 </div>
             <div class="sec-right">
+                
                 <div id="editor">
-import java.io.*;
-import java.util.*;
-
-public class Solution {
-
-    public static void main(String[] args) {
-        /* Enter your code here. 
-           Your class should be named Solution. */
-    }
-}                    
+                    @Model.Answer
                 </div>
             </div>
           

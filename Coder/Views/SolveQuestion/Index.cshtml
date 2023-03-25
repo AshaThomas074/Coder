@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Coder.Models.Contest>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var activeContests = new List<Contest>();
+    var archivedContests = new List<Contest>();
+
+    if (Model != null && Model.Count() > 0)
+    {
+        activeContests = Model.Where(x => x.Status == 1).ToList();
+        archivedContests = Model.Where(x => x.Status == 0).ToList();
+    }
+}
+
+<h2>Contests</h2>
+<hr />
+<br />
+<h4>Active Contests</h4>
+<br />
+<div>
+    @if (activeContests != null && activeContests.Count() > 0)
+    {
+        @foreach (var item in activeContests)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:60%"> <h5>@item.ContestName</h5></td>
+                            <td style="width:30%"> @item.FinalDate</td>
+                            <td style="width:10%"> <a asp-action="ViewQuestions" asp-route-id="@item.ContestId" class="btn btn-primary">View Details</a></td>
+                        </tr>
+                    </table>                    
+                </div>
+            </div>
+        }
+    }
+
+    @if (archivedContests != null && archivedContests.Count() > 0)
+    {
+
+        <h4>Archived Contests</h4>
+        <br />
+        @foreach (var item in archivedContests)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:60%"> <h5>@item.ContestName</h5></td>
+                            <td style="width:30%"> @item.FinalDate</td>
+                            <td style="width:10%"> <a asp-action="ViewQuestions" asp-route-id="@item.ContestId" class="btn btn-primary">View Details</a></td>
+                        </tr>
+                    </table>                    
+                </div>
+            </div>
+        }
+    }
+</div>

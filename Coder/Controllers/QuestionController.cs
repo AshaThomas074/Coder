@@ -1,14 +1,10 @@
-﻿
-using Coder.Data;
+﻿using Coder.Data;
 using Coder.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Security.Claims;
 
 namespace Coder.Controllers
 {
@@ -83,8 +79,7 @@ namespace Coder.Controllers
                     _coderDBContext.Question.Add(question);
                     await _coderDBContext.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
-                }
-                //var errors = ModelState.Values.SelectMany(v => v.Errors);
+                }                
                 question.difficulties = _coderDBContext.QuestionDifficulty.Select(x => new SelectListItem
                 {
                     Text = x.DifficultyName,
@@ -159,13 +154,14 @@ namespace Coder.Controllers
         {
             if (id > 0)
             {
-               Question? question= _coderDBContext.Question.Where(x => x.QuestionId == id).FirstOrDefault();
+               Question? question= _coderDBContext.Question.FindAsync(id).Result;
                 if(question != null)
                 {
-                    question.Status = 0;
-                    question.UpdatedOn = DateTime.Now;
+                    //question.Status = 0;
+                    //question.UpdatedOn = DateTime.Now;
+                    //_coderDBContext.Update(question);
 
-                    _coderDBContext.Update(question);
+                    _coderDBContext.Remove(question);
                     await _coderDBContext.SaveChangesAsync();
                 }
             }
