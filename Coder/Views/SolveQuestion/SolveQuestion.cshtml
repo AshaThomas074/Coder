@@ -31,20 +31,18 @@
                     
                    <p>@Html.Raw(Model.QuestionText)
                    </p>
-                @if (!string.IsNullOrEmpty(Model.TestCaseInput1))
-                {
+                
                     <h5>Sample Input</h5>
                     <div class="div-input-output">
-                        <span style="white-space: pre-line">@Model.TestCaseInput1</span>
+                        <span style="white-space: pre-line">@(!string.IsNullOrEmpty(Model.TestCaseInput1)?Model.TestCaseInput1:"N/A")</span>
                     </div>
-                }
-                @if (!string.IsNullOrEmpty(Model.TestCaseOutput1))
-                {
+                
+                
                     <h5>Sample Output</h5>
                     <div class="div-input-output">
-                        <span style="white-space: pre-line">@Model.TestCaseOutput1</span>
+                        <span style="white-space: pre-line">@(!string.IsNullOrEmpty(Model.TestCaseOutput1) ? Model.TestCaseOutput1 : "N/A")</span>
                     </div>
-                }
+                
             </div>
         <!--   <div id="runresult">
                 <h5>Test result</h5>
@@ -80,15 +78,15 @@
                         <option value="C_Cpp">C++</option>
                     </select>        
                 </div>
-            <div class="sec-right">
-                
-                <div id="editor">
-                    @Model.Answer
+                <div class="sec-right">                
+                    <div id="editor">
+                        @Model.Answer
+                    </div>
                 </div>
-            </div>
-          
-                <button id="codeRun" type="submit" class="btn btn-outline-primary btn-bottom-1">Run</button>
-                <button id="codeSubmit" type="submit" class="btn btn-primary btn-bottom-2">Submit Code</button>
+                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" id="hdnAnswer" asp-for="Answer" />
+                <button id="btncodeRun" type="submit" asp-action="CompileCode" class="btn btn-outline-primary btn-bottom-1">Compile & Run</button>
+                <button id="btncodeSubmit" type="submit" asp-action="" class="btn btn-primary btn-bottom-2">Submit Code</button>
             </form>
         
         
@@ -97,9 +95,5 @@
 
 <!-- <script src="~/js/ace.js" type="text/javascript" charset="utf-8"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.3/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="~/js/solve-challenge.js"></script>
 
-<script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/java");
-</script>

@@ -9,11 +9,13 @@ namespace Coder.Controllers
     {
         private readonly CoderDBContext _coderDBContext;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public SolveQuestionController(CoderDBContext coderDBContext,UserManager<ApplicationUser> userManager)
+        public SolveQuestionController(CoderDBContext coderDBContext,UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _coderDBContext = coderDBContext;
             _userManager = userManager;
+            _configuration = configuration;
         }
         public IActionResult Index()
         {
@@ -51,5 +53,13 @@ namespace Coder.Controllers
             var question=await _coderDBContext.Question.FindAsync(id);
             return View("SolveQuestion",question);
         }
+
+        public IActionResult CompileCode()
+        {
+            var clientid = _configuration.GetValue<string>("clientId");
+            var clientSecret = _configuration.GetValue<string>("clientSecret");
+
+            return View();
+        } 
     }
 }
