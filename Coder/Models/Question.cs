@@ -54,13 +54,6 @@ namespace Coder.Models
         public int Difficulty { get; set; }
         public QuestionDifficulty? QuestionDifficulty { get; set; }
 
-        [Display(Name = "Started Count")]
-        public int StartedCount { get; set; }
-        [Display(Name = "Processing Count")]
-        public int ProcessedCount { get; set; }
-        [Display(Name = "Completed Count")]
-        public int CompletedCount { get; set; }
-
         [ForeignKey("Id")]
         public string? UserId { get; set; }
         public ApplicationUser? User { get; set; }
