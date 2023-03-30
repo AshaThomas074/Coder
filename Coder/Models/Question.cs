@@ -16,6 +16,10 @@ namespace Coder.Models
         [Required]
         [Display(Name ="Enter your question")]
         public string? QuestionText { get; set; }
+        [Display(Name ="Sample Input")]
+        public string? SampleInput { get; set; }
+        [Display(Name ="Sample Output")]
+        public string? SampleOutput { get; set; }
 
         [ValidateNever]
         [Display(Name = "Input 1")]
@@ -37,13 +41,9 @@ namespace Coder.Models
         [Display(Name = "Output 3")]
         public string? TestCaseOutput3 { get; set; }
 
-        [Required]
-        [Display(Name ="Initial Template")]
+        [Display(Name ="Initial Template(Optional)")]
         public string? Answer { get; set; }
 
-        [Required]
-        [Display(Name = "Final Date")]
-        public DateTime? FinalDate { get; set; }
         [Required]
         public float? Score { get; set; }
 
@@ -64,5 +64,9 @@ namespace Coder.Models
         public IEnumerable<SelectListItem>? difficulties { get; set; }
         
         public ICollection<QuestionContestMap>? QuestionContestMaps { get; set; }
+        
+        public ICollection<Submission>? SubmissionsList { get; set; }
+        
+        public ICollection<Language>? LanguagesList { get; set; }
     }
 }

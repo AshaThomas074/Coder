@@ -4,6 +4,7 @@ using Coder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coder.Migrations
 {
     [DbContext(typeof(CoderDBContext))]
-    partial class CoderDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230326235300_update question2")]
+    partial class updatequestion2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,34 +150,6 @@ namespace Coder.Migrations
                     b.ToTable("Contest");
                 });
 
-            modelBuilder.Entity("Coder.Models.Language", b =>
-                {
-                    b.Property<int>("LanguageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LanguageId"));
-
-                    b.Property<string>("AceLanguageCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InitialCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("JDoodleLanguageCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LanguageName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("VersionIndex")
-                        .HasColumnType("int");
-
-                    b.HasKey("LanguageId");
-
-                    b.ToTable("Language");
-                });
-
             modelBuilder.Entity("Coder.Models.Question", b =>
                 {
                     b.Property<int>("QuestionId")
@@ -184,6 +159,7 @@ namespace Coder.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionId"));
 
                     b.Property<string>("Answer")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -191,6 +167,10 @@ namespace Coder.Migrations
 
                     b.Property<int>("Difficulty")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("FinalDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("QuestionHeading")
                         .IsRequired()

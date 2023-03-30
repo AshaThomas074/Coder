@@ -19,5 +19,7 @@ namespace Coder.Models
         public ICollection<Contest>? Contests { get; set; }
         public ICollection<Question>? Questions { get; set; }
         public ICollection<StudentContestMap>? StudentContestMaps { get; set; }
+        public ICollection<Submission>? Submissions { get; set;}
+        
     }
 }

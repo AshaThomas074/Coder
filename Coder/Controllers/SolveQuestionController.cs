@@ -33,7 +33,8 @@ namespace Coder.Controllers
 
         public IActionResult ViewQuestions(int id)
         {
-            IList<QuestionViewModel> question = (from a in _coderDBContext.Question
+            SolveQuestionViewModel viewModel = new SolveQuestionViewModel();
+            IList<QuestionViewModel> question = (from a in _coderDBContext.Question                                                 
                                                  where (from b in _coderDBContext.QuestionContestMap
                                                         where b.ContestId == id
                                                         select b.QuestionId).Contains(a.QuestionId)
@@ -42,24 +43,57 @@ namespace Coder.Controllers
                                                      QuestionId = a.QuestionId,
                                                      QuestionHeading = a.QuestionHeading != null ? a.QuestionHeading : "",
                                                      Difficulty = a.Difficulty != 0 && a.QuestionDifficulty != null ? a.QuestionDifficulty.DifficultyName : "",
-                                                     Score = a.Score
+                                                     Score = a.Score                                                    
                                                  }).ToList();
-                
-            return View(question);
+
+            viewModel.QuestionViewModel = question;
+            viewModel.ContestId= id;
+            return View(viewModel);
         }
 
-        public async Task<IActionResult> LoadSolveChallengePage(int id)
+        public async Task<IActionResult> LoadSolveChallengePage(int qid, int cid)
         {
-            var question=await _coderDBContext.Question.FindAsync(id);
-            return View("SolveQuestion",question);
+            SolveQuestionViewModel viewModel = new SolveQuestionViewModel();
+            var question = await _coderDBContext.Question.FindAsync(qid);
+            if (question != null)
+                viewModel.Question = question;
+            viewModel.LanguagesList = (from a in _coderDBContext.Language
+                                      select new Language()
+                                      {
+                                          LanguageId= a.LanguageId,
+                                          LanguageName= a.LanguageName,
+                                          JDoodleLanguageCode= a.JDoodleLanguageCode,
+                                          AceLanguageCode= a.AceLanguageCode,
+                                          InitialCode= a.InitialCode
+                                      }).ToList();
+
+            viewModel.Submission = new Submission();
+            viewModel.Submission.UserId= _userManager.GetUserId(HttpContext.User);
+            return View("SolveQuestion", viewModel);
         }
 
         public IActionResult CompileCode()
         {
             var clientid = _configuration.GetValue<string>("clientId");
             var clientSecret = _configuration.GetValue<string>("clientSecret");
+            var jdoodleAPI = _configuration.GetValue<string>("jdoodleAPI");
 
             return View();
-        } 
+        }
+
+        [HttpGet]
+        public JsonResult GetLanguageList()
+        {
+           var lang= (from a in _coderDBContext.Language
+             select new Language()
+             {
+                 LanguageId = a.LanguageId,
+                 LanguageName = a.LanguageName,
+                 JDoodleLanguageCode = a.JDoodleLanguageCode,
+                 AceLanguageCode = a.AceLanguageCode,
+                 InitialCode = a.InitialCode
+             }).ToList();
+            return Json(lang);
+        }
     }
 }

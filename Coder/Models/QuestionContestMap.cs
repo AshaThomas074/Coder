@@ -23,6 +23,7 @@ namespace Coder.Models
         public ApplicationUser? User { get; set; }
         [NotMapped]
         public string? QuestionHeading { get; set; }
+        public ICollection<Submission>? Submissions { get; set; }
 
     }
 }

@@ -1,4 +1,4 @@
-﻿@model Coder.Models.Question
+﻿@model Coder.Models.SolveQuestionViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -19,81 +19,111 @@
         padding: 10px;
     }
 </style>
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col">
+            @if (Model.Question != null)
+            {
+                <section>
 
-<div class="row">
-    <div class="col">
-        <section>
-            
-                <h4>@Model.QuestionHeading</h4>
-                <hr />
-                
-                <div class="sec-left">                   
-                    
-                   <p>@Html.Raw(Model.QuestionText)
-                   </p>
-                
-                    <h5>Sample Input</h5>
-                    <div class="div-input-output">
-                        <span style="white-space: pre-line">@(!string.IsNullOrEmpty(Model.TestCaseInput1)?Model.TestCaseInput1:"N/A")</span>
-                    </div>
-                
-                
-                    <h5>Sample Output</h5>
-                    <div class="div-input-output">
-                        <span style="white-space: pre-line">@(!string.IsNullOrEmpty(Model.TestCaseOutput1) ? Model.TestCaseOutput1 : "N/A")</span>
-                    </div>
-                
-            </div>
-        <!--   <div id="runresult">
-                <h5>Test result</h5>
-                <p>
-                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
-                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
-                    You are given a class Solution with a main method. Complete the given code so that it outputs
-                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
-                </p>
-                <p>
-                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
-                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
-                    You are given a class Solution with a main method. Complete the given code so that it outputs
-                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
-                </p>
-                <p>
-                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
-                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
-                    You are given a class Solution with a main method. Complete the given code so that it outputs
-                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
-                </p>
-            </div> -->
-        </section>
-    </div>
+                    <h4>@Model.Question.QuestionHeading</h4>
+                    <hr />
 
-    <div class="col">
-        
+                    <div class="sec-left">                   
+
+                        <p>@Html.Raw(Model.Question.QuestionText)
+                        </p>
+
+                        <h5>Sample Input</h5>
+                        <div class="div-input-output">
+                            <span style="white-space: pre-line">@(
+                        !string.IsNullOrEmpty(Model.Question.SampleInput) ? Model.Question.SampleInput : "N/A"
+)</span>
+                        </div>
+
+
+                        <h5>Sample Output</h5>
+                        <div class="div-input-output">
+                            <span style="white-space: pre-line">@(
+                        !string.IsNullOrEmpty(Model.Question.SampleOutput) ? Model.Question.SampleOutput : "N/A"
+                        )</span>
+                        </div>
+
+                    </div>
+                    <!--   <div id="runresult">
+                    <h5>Test result</h5>
+                    <p>
+                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
+                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
+                    You are given a class Solution with a main method. Complete the given code so that it outputs
+                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
+                    </p>
+                    <p>
+                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
+                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
+                    You are given a class Solution with a main method. Complete the given code so that it outputs
+                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
+                    </p>
+                    <p>
+                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
+                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
+                    You are given a class Solution with a main method. Complete the given code so that it outputs
+                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
+                    </p>
+                    </div> -->
+                </section>
+            }
+        </div>
+
+        <div class="col">
+
             <form id="answer" method="post">
                 <div class="form-floating">
-                    <select name="codelanguage" id="codelanguage" class="select-right">
-                        <option value="Java">Java</option>
-                        <option value="C_Cpp">C</option>
-                        <option value="C_Cpp">C++</option>
+                    <select name="codelanguage" asp-for="@Model.Submission.LanguageId" id="codelanguage" class="select-right">
+                        @if (Model.LanguagesList != null && Model.LanguagesList.Count() > 0)
+                        {
+                            foreach (var item in Model.LanguagesList)
+                            {
+                                if (item.LanguageName.Equals("Java"))
+                                {
+                                    <option value="@item.LanguageId" selected>@item.LanguageName</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.LanguageId">@item.LanguageName</option>
+                                }
+                            }
+                        }
                     </select>        
                 </div>
                 <div class="sec-right">                
                     <div id="editor">
-                        @Model.Answer
+                        @(
+                        Model != null && Model.Question != null ? Model.Question.Answer : ""
+                        )
                     </div>
                 </div>
-                <input type="hidden" asp-for="UserId" />
-                <input type="hidden" id="hdnAnswer" asp-for="Answer" />
+                @if (Model != null && Model.Submission != null)
+                {
+                    <input type="hidden" id="hdnSelectedLanguage"/>
+                    <input type="hidden" asp-for="@Model.Submission.UserId" />
+                    <input type="hidden" id="hdnAnswer" />
+                    <input type="hidden" asp-for="@Model.Submission.QuestionContestId" />
+                    <input type="hidden" asp-for="@Model.Submission.UserId" />
+                    <input type="hidden" id="hdnSubmissionContent" asp-for="@Model.Submission.SubmissionContent" />
+                }
                 <button id="btncodeRun" type="submit" asp-action="CompileCode" class="btn btn-outline-primary btn-bottom-1">Compile & Run</button>
                 <button id="btncodeSubmit" type="submit" asp-action="" class="btn btn-primary btn-bottom-2">Submit Code</button>
             </form>
-        
-        
+
+
+        </div>
     </div>
-</div>
+}
 
 <!-- <script src="~/js/ace.js" type="text/javascript" charset="utf-8"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.3/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="~/js/solve-challenge.js"></script>
+<script src="~/js/solve-challenge.js" type="text/javascript"></script>
+
 

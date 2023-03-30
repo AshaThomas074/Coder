@@ -59,7 +59,8 @@ namespace Coder.Controllers
                 Text = x.DifficultyName,
                 Value = x.DifficultyId.ToString()
             });
-            
+            question.LanguagesList = _coderDBContext.Language.ToList();
+
             return View(question);
         }
 

@@ -66,6 +66,10 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
+                <label asp-for="SampleInput" class="control-label"></label>
+                <textarea asp-for="SampleInput" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
                 <label asp-for="TestCaseInput1" class="control-label"></label>
                 <textarea asp-for="TestCaseInput1" class="form-control"></textarea>
             </div>
@@ -81,9 +85,12 @@
             </div>
 
 
-
         </div>
         <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="SampleOutput" class="control-label"></label>
+                <textarea asp-for="SampleOutput" class="form-control"></textarea>
+            </div>
             <div class="form-group">
                 <label asp-for="TestCaseOutput1" class="control-label"></label>
                 <textarea asp-for="TestCaseOutput1" class="form-control"></textarea>
@@ -102,13 +109,6 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <label asp-for="FinalDate" class="control-label"></label>
-                <input asp-for="FinalDate" class="form-control" />
-                <span asp-validation-for="FinalDate" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
                 <label asp-for="Difficulty" class="control-label"></label>
                 <select asp-for="Difficulty" asp-items="Model.difficulties" class="form-select">
                     <option disabled selected>Select Difficulty</option>
@@ -123,18 +123,16 @@
                 <input asp-for="Score" class="form-control" />
                 <span asp-validation-for="Score" class="text-danger"></span>
             </div>
-
         </div>
-
-    </div>
-    <div class="row">
-        <div class="col">
+        <div class="col-md-4">
+           
             <div class="form-group btn-right">
                 <input type="submit" value="Save" id="btnSubmit" class="btn btn-primary" />
             </div>
-
         </div>
+
     </div>
+
     <input type="hidden" asp-for="UserId" />
     <input type="hidden" id="hdnAnswer" asp-for="Answer" />
     <input type="hidden" asp-for="QuestionId" />
