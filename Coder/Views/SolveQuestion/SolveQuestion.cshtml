@@ -80,12 +80,12 @@
 
             <form id="answer" method="post">
                 <div class="form-floating">
-                    <select name="codelanguage" asp-for="@Model.Submission.LanguageId" id="codelanguage" class="select-right">
+                    <select name="codelanguage" id="codelanguage" class="select-right">
                         @if (Model.LanguagesList != null && Model.LanguagesList.Count() > 0)
                         {
                             foreach (var item in Model.LanguagesList)
                             {
-                                if (item.LanguageName.Equals("Java"))
+                                if (item.LanguageName != null && item.LanguageName.Equals("Java"))
                                 {
                                     <option value="@item.LanguageId" selected>@item.LanguageName</option>
                                 }
@@ -106,15 +106,17 @@
                 </div>
                 @if (Model != null && Model.Submission != null)
                 {
-                    <input type="hidden" id="hdnSelectedLanguage"/>
+                    <input type="hidden" id="hdnSelectedLanguage" asp-for="@Model.Submission.LanguageId"/>
                     <input type="hidden" asp-for="@Model.Submission.UserId" />
                     <input type="hidden" id="hdnAnswer" />
+                    <input type="hidden" id="hdnLangCode" asp-for="@Model.JDoodleLanguageCode" />
+                    <input type="hidden" id="hdnVersionIndex" asp-for="@Model.VersionIndex" />
                     <input type="hidden" asp-for="@Model.Submission.QuestionContestId" />
-                    <input type="hidden" asp-for="@Model.Submission.UserId" />
+                    <input type="hidden" asp-for="@Model.Submission.UserId" />                    
                     <input type="hidden" id="hdnSubmissionContent" asp-for="@Model.Submission.SubmissionContent" />
                 }
                 <button id="btncodeRun" type="submit" asp-action="CompileCode" class="btn btn-outline-primary btn-bottom-1">Compile & Run</button>
-                <button id="btncodeSubmit" type="submit" asp-action="" class="btn btn-primary btn-bottom-2">Submit Code</button>
+                <button id="btncodeSubmit" type="submit" asp-action="SubmitChallenge" class="btn btn-primary btn-bottom-2">Submit Code</button>
             </form>
 
 

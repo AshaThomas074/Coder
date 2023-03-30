@@ -68,6 +68,7 @@ namespace Coder.Controllers
                                       }).ToList();
 
             viewModel.Submission = new Submission();
+            viewModel.Submission.QuestionContestId = _coderDBContext.QuestionContestMap.Where(x => x.ContestId == cid && x.QuestionId == qid).Select(y => y.QuestionContestId).FirstOrDefault();
             viewModel.Submission.UserId= _userManager.GetUserId(HttpContext.User);
             return View("SolveQuestion", viewModel);
         }
@@ -77,6 +78,7 @@ namespace Coder.Controllers
             var clientid = _configuration.GetValue<string>("clientId");
             var clientSecret = _configuration.GetValue<string>("clientSecret");
             var jdoodleAPI = _configuration.GetValue<string>("jdoodleAPI");
+
 
             return View();
         }

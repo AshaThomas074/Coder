@@ -15,7 +15,7 @@ namespace Coder.Models
         public int? QuestionContestId { get; set; }
         public QuestionContestMap? QuestionContestMap { get; set; }
         public DateTime? CreatedOn { get; set; }
-        public DateTime? UpdatedOn { get; set;}
+        public DateTime? UpdatedOn { get; set;}        
         
     }
 }

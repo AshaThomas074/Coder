@@ -78,13 +78,13 @@ a {
 .btn-bottom-1 {
     position: absolute;
     top: 102px;
-    right: 600px;   
+    right: 535px;   
 }
 
 .btn-bottom-2 {
     position: absolute;
     top: 102px;
-    right: 462px;
+    right: 400px;
     
     /*left: 1200px;*/
 }
