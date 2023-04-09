@@ -41,7 +41,7 @@ namespace Coder.Models
         [Display(Name = "Output 3")]
         public string? TestCaseOutput3 { get; set; }
 
-        [Display(Name ="Initial Template(Optional)")]
+        [Display(Name ="Full Code")]
         public string? Answer { get; set; }
 
         [Required]
@@ -62,11 +62,10 @@ namespace Coder.Models
         public int Status { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem>? difficulties { get; set; }
-        
         public ICollection<QuestionContestMap>? QuestionContestMaps { get; set; }
-        
+        [NotMapped]
         public ICollection<Submission>? SubmissionsList { get; set; }
-        
+        [NotMapped]
         public ICollection<Language>? LanguagesList { get; set; }
     }
 }

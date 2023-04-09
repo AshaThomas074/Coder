@@ -18,6 +18,8 @@ namespace Coder.Models
         public int? Status { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get;set; }
+        public DateTime? AttendedOn { get; set; }
+        public DateTime? CompletedOn { get; set; }
         [NotMapped]
         public string? FirstName { get; set; }
         [NotMapped]

@@ -1,7 +1,17 @@
-﻿@model Coder.Models.SolveQuestionViewModel
+﻿@using System.Text.Json;
+@model Coder.Models.SolveQuestionViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    int? NumberOfTestCasesPassed = null;
+    int? TotalTestCases = null;
+    if (Model != null && Model.Submission != null)
+    {
+        TotalTestCases = Model.Submission.TotalTestCases;
+        NumberOfTestCasesPassed = Model.Submission.NumberOfTestCasesPassed;
+    }
+    
+
 }
 <style type="text/css" media="screen">
     #editor {
@@ -19,8 +29,13 @@
         padding: 10px;
     }
 </style>
+
 @if (Model != null)
 {
+    <script>
+        var IsCompiled = @(( Model.Submission != null && @Model.Submission.SubmissionId != 0) ? @Html.Raw("true") : Html.Raw("false"));
+    </script>
+
     <div class="row">
         <div class="col">
             @if (Model.Question != null)
@@ -37,41 +52,39 @@
 
                         <h5>Sample Input</h5>
                         <div class="div-input-output">
-                            <span style="white-space: pre-line">@(
-                        !string.IsNullOrEmpty(Model.Question.SampleInput) ? Model.Question.SampleInput : "N/A"
-)</span>
+                            <span style="white-space: pre;">
+                                @(!string.IsNullOrEmpty(Model.Question.SampleInput) ? Model.Question.SampleInput : "N/A")
+                            </span>
                         </div>
 
 
                         <h5>Sample Output</h5>
                         <div class="div-input-output">
-                            <span style="white-space: pre-line">@(
+                            <span style="white-space: pre;">
+                                @(
                         !string.IsNullOrEmpty(Model.Question.SampleOutput) ? Model.Question.SampleOutput : "N/A"
                         )</span>
                         </div>
 
                     </div>
-                    <!--   <div id="runresult">
-                    <h5>Test result</h5>
-                    <p>
-                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
-                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
-                    You are given a class Solution with a main method. Complete the given code so that it outputs
-                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
-                    </p>
-                    <p>
-                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
-                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
-                    You are given a class Solution with a main method. Complete the given code so that it outputs
-                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
-                    </p>
-                    <p>
-                    Static initialization blocks are executed when the class is loaded, and you can initialize static variables in those blocks.
-                    It's time to test your knowledge of Static initialization blocks. You can read about it here.
-                    You are given a class Solution with a main method. Complete the given code so that it outputs
-                    the area of a parallelogram with breadth  and height . You should read the variables from the standard input.
-                    </p>
-                    </div> -->
+                    @if (!string.IsNullOrEmpty(Model.Error) || Model.Success == 1 || TotalTestCases != null)
+                    {
+                        <div id="runresult">
+                            <h5>Test result</h5>
+                            @if (NumberOfTestCasesPassed != null && TotalTestCases != null && TotalTestCases != 0)
+                            {
+                                <p style="color:green;">@(NumberOfTestCasesPassed) out of @(TotalTestCases) passed. </p>
+                            }
+                            else if(Model.Success == 1)
+                            {
+                                <p style="color:green;">Successfully compiled and run</p>
+                            }
+                            else if (!string.IsNullOrEmpty(Model.Error))
+                            {
+                                <p style="color:red;">@Model.Error</p>
+                            }
+                        </div>
+                    }
                 </section>
             }
         </div>
@@ -83,15 +96,28 @@
                     <select name="codelanguage" id="codelanguage" class="select-right">
                         @if (Model.LanguagesList != null && Model.LanguagesList.Count() > 0)
                         {
-                            foreach (var item in Model.LanguagesList)
+                            if (Model.Submission != null && !string.IsNullOrEmpty(Model.Submission.SubmissionContent))
                             {
-                                if (item.LanguageName != null && item.LanguageName.Equals("Java"))
+                                foreach (var item in Model.LanguagesList)
                                 {
-                                    <option value="@item.LanguageId" selected>@item.LanguageName</option>
+                                    if (item.LanguageId == Model.Submission.LanguageId)
+                                    {
+                                        <option value="@item.LanguageId" selected>@item.LanguageName</option>
+                                    }                                    
                                 }
-                                else
+                            }
+                            else
+                            {
+                                foreach (var item in Model.LanguagesList)
                                 {
-                                    <option value="@item.LanguageId">@item.LanguageName</option>
+                                    if (item.LanguageName != null && item.LanguageName.Equals("Java"))
+                                    {
+                                        <option value="@item.LanguageId" selected>@item.LanguageName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.LanguageId">@item.LanguageName</option>
+                                    }
                                 }
                             }
                         }
@@ -99,28 +125,40 @@
                 </div>
                 <div class="sec-right">                
                     <div id="editor">
-                        @(
-                        Model != null && Model.Question != null ? Model.Question.Answer : ""
-                        )
+
+                        @if (Model.Submission != null && !string.IsNullOrEmpty(Model.Submission.SubmissionContent))
+                        {
+                            @Model.Submission.SubmissionContent
+                        }                        
                     </div>
                 </div>
-                @if (Model != null && Model.Submission != null)
+                @if (Model != null && Model.Submission != null && Model.Question != null)
                 {
                     <input type="hidden" id="hdnSelectedLanguage" asp-for="@Model.Submission.LanguageId"/>
-                    <input type="hidden" asp-for="@Model.Submission.UserId" />
+                    <input type="hidden" id="hdnUserId" asp-for="@Model.Submission.UserId" />
                     <input type="hidden" id="hdnAnswer" />
                     <input type="hidden" id="hdnLangCode" asp-for="@Model.JDoodleLanguageCode" />
                     <input type="hidden" id="hdnVersionIndex" asp-for="@Model.VersionIndex" />
-                    <input type="hidden" asp-for="@Model.Submission.QuestionContestId" />
-                    <input type="hidden" asp-for="@Model.Submission.UserId" />                    
+                    <input type="hidden" id="hdnQuestionContestId" asp-for="@Model.Submission.QuestionContestId" />                 
+                    <input type="hidden" id="hdnQuestionId" asp-for="@Model.Question.QuestionId" />
                     <input type="hidden" id="hdnSubmissionContent" asp-for="@Model.Submission.SubmissionContent" />
+                    <input type="hidden" id="hdnCreatedOn" asp-for="@Model.Submission.CreatedOn" />
+                    <input type="hidden" id="hdnSubmissionId" asp-for="@Model.Submission.SubmissionId" />
+                    <input type="hidden" asp-for="@Model.ContestId" />
+
+                    @if (Model.Submission.SubmittedStatus == 0 || Model.Submission.SubmittedStatus == null)
+                    {
+                        <button id="btncodeRun" type="submit" asp-action="CompileCode" class="btn btn-outline-primary btn-bottom-1">Compile & Run</button>
+                        <button id="btncodeSubmit" type="submit" asp-action="SubmitChallenge" class="btn btn-primary btn-bottom-2">Submit Code</button>
+                    }
                 }
-                <button id="btncodeRun" type="submit" asp-action="CompileCode" class="btn btn-outline-primary btn-bottom-1">Compile & Run</button>
-                <button id="btncodeSubmit" type="submit" asp-action="SubmitChallenge" class="btn btn-primary btn-bottom-2">Submit Code</button>
             </form>
 
 
         </div>
+    </div>
+    <div>
+        <a asp-action="ViewQuestions?id=@(Model.ContestId)">Back to List</a>
     </div>
 }
 

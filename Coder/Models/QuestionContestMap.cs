@@ -14,7 +14,7 @@ namespace Coder.Models
         public int QuestionId { get; set; }
         public Question? Questions { get; set; }
         public int StartedCount { get; set; }
-        public int ProcessingCount { get; set; }
+        //public int ProcessingCount { get; set; }
         public int CompletedCount { get; set; }
         public DateTime CreatedOn { get; set; }= DateTime.Now;
         public DateTime UpdatedOn { get; set; }= DateTime.Now;

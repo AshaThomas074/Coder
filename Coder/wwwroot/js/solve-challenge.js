@@ -1,6 +1,7 @@
 ﻿var languageList = [];
 var lang;
-  
+var viewModel = {};
+
 var editor = ace.edit("editor");
 editor.setTheme("ace/theme/monokai");
 editor.session.setMode("ace/mode/java");
@@ -13,7 +14,8 @@ if (languageList.length == 0) {
 
 window.setTimeout(function () {
     getSelectedLanguage();
-    setEditorValue();
+    if (!IsCompiled)
+        setEditorValue();
 
     $("#codelanguage").on("change", function (e) {
         getSelectedLanguage();
@@ -22,8 +24,48 @@ window.setTimeout(function () {
         setEditorValue();
     });
 
-    $("#btncodeRun").on("click", function (event) {
+    $("#btncodeRun").on("click", function (e) {      
         $("#hdnSubmissionContent").val(editor.getValue());
+        /*
+        viewModel.ContestId = 0;
+        viewModel.JDoodleLanguageCode = $("#hdnLangCode").val();
+        viewModel.VersionIndex = $("#hdnVersionIndex").val();
+        viewModel['Question'] = [];
+        var obj = {
+            'QuestionId': $("#hdnQuestionId").val()
+        };
+        viewModel['Question'].push(obj);
+        viewModel['Submission'] = [];
+        var obj = {
+            'SubmissionId': $("#hdnSubmissionId").val(),
+            'LanguageId': $("#hdnSelectedLanguage").val(),
+            'UserId': $("#hdnUserId").val(),
+            'QuestionContestId': $("#hdnQuestionContestId").val(),
+            'SubmissionContent': editor.getValue(),
+            'CreatedOn': $("#hdnCreatedOn").val(),
+        };
+        viewModel['Submission'].push(obj);
+        viewModel['LanguagesList'] = null;
+        viewModel['QuestionViewModel'] = null;
+
+        console.log(viewModel); 
+        var p = $(this).attr('data-pdetail');
+        $.ajax({
+            type: 'POST',
+            url: 'CompileCode',
+            contentType: 'application/json',
+            data: {
+                "viewModel": JSON.stringify(p)
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response != null) {
+                    
+                    console.log(response);
+                }
+            },
+            error: function (error) { console.log(error); }
+        });*/
     });
 }, 0); 
 
@@ -60,4 +102,12 @@ function setEditorValue() {
 function getSelectedLanguage() {
     $("#hdnSelectedLanguage").val($("#codelanguage :selected").val());
     lang = $("#hdnSelectedLanguage").val();
+    if ($("#hdnLangCode").val() == "") {
+        $.each(languageList, function (key, value) {
+            if (value.languageId == lang) {
+                $("#hdnLangCode").val(value.jDoodleLanguageCode);
+                $("#hdnVersionIndex").val(value.versionIndex);
+            }
+        });
+    }
 }
