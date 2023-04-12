@@ -28,7 +28,14 @@
                                 }
                                 else
                                 {
-                                    @Html.ActionLink("Solve Challenge", "LoadSolveChallengePage", new { qid = item.QuestionId,cid=Model.ContestId })
+                                    if (Model.StudentContestFinishStatus == 0)
+                                    {
+                                        @Html.ActionLink("Solve Challenge", "LoadSolveChallengePage", new { qid = item.QuestionId,cid=Model.ContestId })
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Not Submitted", "LoadSolveChallengePage", new { qid = item.QuestionId,cid=Model.ContestId })
+                                    }
                                 }
                             </td>
                         </tr>
@@ -39,3 +46,6 @@
     }
    
 </div>
+ <div style="margin-top: 50px;">
+    <a asp-action="Index" >Back to List</a>
+    </div>

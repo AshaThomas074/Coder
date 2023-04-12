@@ -53,38 +53,37 @@
 <div class="div-wid-5 div-pad">
     <a asp-action="GetMappedStudents" asp-route-id="@Model.ContestId">Click here to Map Student</a>
 </div>
-<div>
-<hr/>
-<h4>Map Questions</h4>
 
-    <form asp-action="MapQuestionToContest">
-    <table style="width:45%">
-        <tr>
-            <td class="col-sm-10">
-                <select id="ddlQuestion" class="form-select" asp-for="@Model.QuestionContestMap.QuestionId" asp-items="Model.questionsDDL">
-                    <option value="">Select Question</option>
-                </select>
-                <span id="spnValid" asp-validation-for="@Model.QuestionContestMap.QuestionId" class="text-danger">
-                    The Difficulty field is required.
-                </span>
-            </td>
-            <td class="col-sm-2">
-                    <input type="submit" id="btnContestSubmit" value="Save" class="btn btn-primary" style="margin-left: 15px;" />
-            </td>
-            </tr>
+    <div>
+    @{
+        if (Model.PublishedStatus != 1)
+    {
+        <hr/>
+        <h4>Map Questions</h4>
 
-  <!--  <dd class="col-sm-4">
-                <select id="ddlQuestion" class="form-select" asp-for="@Model.QuestionContestMap.QuestionId" asp-items="Model.questionsDDL">
-            <option value="">Select Question</option>
-        </select>
-                <span id="spnValid" asp-validation-for="@Model.QuestionContestMap.QuestionId" class="text-danger">
-                    The Difficulty field is required.
-                </span>
-    </dd> -->
-</table>
-    <input type="hidden" asp-for="@Model.QuestionContestMap.ContestId" value="@Model.ContestId" />
-    </form>
-</div>
+        <form asp-action="MapQuestionToContest">
+            <table style="width:45%">
+                <tr>
+                    <td class="col-sm-10">
+                        <select id="ddlQuestion" class="form-select" asp-for="@Model.QuestionContestMap.QuestionId" asp-items="Model.questionsDDL">
+                            <option value="">Select Question</option>
+                        </select>
+                        <span id="spnValid" asp-validation-for="@Model.QuestionContestMap.QuestionId" class="text-danger">
+                            The Difficulty field is required.
+                        </span>
+                    </td>
+                    <td class="col-sm-2">
+                        <input type="submit" id="btnContestSubmit" value="Save" class="btn btn-primary" style="margin-left: 15px;" />
+                    </td>
+                </tr>
+
+            </table>
+            <input type="hidden" asp-for="@Model.QuestionContestMap.ContestId" value="@Model.ContestId" />
+        </form>
+        }
+        }
+    </div>
+
 <div>
     <table class="table">
         <thead>
@@ -114,10 +113,13 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Score)
                     </td>
-                    <td>                        
-                        @Html.ActionLink("Delete", "DeleteQuestionContestMaping", new { Qid = item.QuestionId,Cid=Model.ContestId },
+                        @if (Model.PublishedStatus != 1)
+                        {
+                            <td>                        
+                                @Html.ActionLink("Delete", "DeleteQuestionContestMaping", new { Qid = item.QuestionId,Cid=Model.ContestId },
                     new { onclick = "return confirm('Are sure wants to delete?');" })
                     </td>
+                    }
                 </tr>
             }
             }
@@ -128,4 +130,3 @@
     <a asp-action="Edit" asp-route-id="@Model?.ContestId">Edit Contest</a> |
     <a asp-action="Index">Back to List</a>
 </div>
-

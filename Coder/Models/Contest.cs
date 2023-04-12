@@ -23,7 +23,13 @@ namespace Coder.Models
         public string? UserId { get; set; }
         public ApplicationUser? User { get; set; }
         public int? Status { get; set; }   
-        public int? PublishedStatus { get; set; }    
+        public int? PublishedStatus { get; set; }
+        [NotMapped]
+        public DateTime? AttendedOn { get; set; }
+        [NotMapped]
+        public DateTime? CompletedOn { get; set; }
+        [NotMapped]
+        public int? StudentContestStatus { get; set; }
         public ICollection<QuestionContestMap>? QuestionContestMaps { get; set; }
         [NotMapped]
        

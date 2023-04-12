@@ -4,6 +4,7 @@ using Coder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coder.Migrations
 {
     [DbContext(typeof(CoderDBContext))]
-    partial class CoderDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230409233337_update contestmap")]
+    partial class updatecontestmap
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -332,6 +335,9 @@ namespace Coder.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentContestId"));
 
+                    b.Property<DateTime?>("AttendedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("CompletedOn")
                         .HasColumnType("datetime2");
 
@@ -343,9 +349,6 @@ namespace Coder.Migrations
 
                     b.Property<int?>("QuestionsAttended")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("StartedOn")
-                        .HasColumnType("datetime2");
 
                     b.Property<int?>("Status")
                         .HasColumnType("int");

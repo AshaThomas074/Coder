@@ -174,10 +174,10 @@ namespace Coder.Controllers
             questionContestMap.UserId= _userManager.GetUserId(HttpContext.User);
             _context.QuestionContestMap.Add(questionContestMap);
             await _context.SaveChangesAsync();
+           
             return RedirectToAction("Details",new { id = questionContestMap.ContestId });
 
         }
-
 
         public async Task<IActionResult> DeleteQuestionContestMaping(int Cid,int Qid)
         {
@@ -251,7 +251,7 @@ namespace Coder.Controllers
                     
                     viewModel.StudentContestMap.CreatedOn = DateTime.Now;
                     viewModel.StudentContestMap.UpdatedOn = DateTime.Now;
-
+                    viewModel.StudentContestMap.Status = 0;
                     _context.StudentContestMap.Add(viewModel.StudentContestMap);
                     await _context.SaveChangesAsync();
                 }
@@ -274,6 +274,29 @@ namespace Coder.Controllers
         private bool ContestExists(int id)
         {
           return _context.Contest.Any(e => e.ContestId == id);
+        }
+
+        public ActionResult PublishContest(int contestId)
+        {
+            var totalQuestion = _context.QuestionContestMap.Where(x => x.ContestId == contestId).ToList().Count();
+            var contest = _context.Contest.FirstOrDefaultAsync(x => x.ContestId == contestId).Result;
+            if (contest != null)
+            {
+                contest.PublishedStatus = 1;
+                contest.UpdatedOn= DateTime.Now;
+                _context.Update(contest);
+                _context.SaveChanges();
+            }
+
+            var studentContest = _context.StudentContestMap.Where(x => x.ContestId == contestId).ToList();
+            foreach(var map in studentContest)
+            {
+                map.TotalQuestions= totalQuestion;
+                _context.StudentContestMap.Update(map);
+                _context.SaveChanges();
+            }
+
+            return View();
         }
     }
 }

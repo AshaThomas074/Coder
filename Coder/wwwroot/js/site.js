@@ -47,4 +47,24 @@ $(document).ready(function () {
         }
     });
 
+
+    $(".toggleSwitch").on("change",function () {
+        if (this.checked) {
+            contestId = $(this).attr("data-contestid");
+                       
+            $.ajax({
+                type: 'POST',
+                url: '/SolveQuestion/UpdateStudentContestFinishStatus?contestId=' + contestId,
+                contentType: 'application/json',
+                dataType: 'json',                
+                success: function (response) {
+                    if (response != null && response == 1) {
+                        $("#sliderRound_" + contestId).hide();
+                    }
+                },
+                error: function (error) { console.log(error); }
+            });
+        } 
+    });
+
 });
