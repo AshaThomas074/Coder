@@ -18,7 +18,7 @@
                 <div class="card-body">
                     <table style="width:100%">
                         <tr>
-                            <td style="width:50%"> <h5>@(count++): @item.QuestionHeading</h5></td>
+                            <td style="width:50%"> @(count++): @item.QuestionHeading</td>
                             <td style="width:20%">Difficulty: @item.Difficulty </td>
                             <td style="width:15%">Score: @item.Score </td>
                             <td style="width:15%">
@@ -46,6 +46,6 @@
     }
    
 </div>
- <div style="margin-top: 50px;">
+ <div style="margin-top: 30px;">
     <a asp-action="Index" >Back to List</a>
     </div>
