@@ -53,15 +53,41 @@ $(document).ready(function () {
             contestId = $(this).attr("data-contestid");
             if (confirm("Are you sure you want to submit this contest?")) {
 
-
+/*
                 $.ajax({
                     type: 'POST',
-                    url: '/SolveQuestion/UpdateStudentContestFinishStatus?contestId=' + contestId,
+                    url: '/DashboardStudent/UpdateStudentContestFinishStatus?contestId=' + contestId,
                     contentType: 'application/json',
                     dataType: 'json',
                     success: function (response) {
                         if (response != null && response == 1) {
                             $("#sliderRound_" + contestId).hide();
+                        }
+                    },
+                    error: function (error) { console.log(error); }
+                });*/
+            }
+            else {
+                $(this).prop('checked', false);
+                return false;
+            }
+        }
+    });
+
+    $(".toggle-contest-switch").on("change", function () {
+        if (this.checked) {
+            contestId = $(this).attr("data-contestid");
+            if (confirm("Are you sure you want to publish this contest?")) {
+
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Contests/PublishContest?contestId=' + contestId,
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response != null && response == 1) {
+                            $("#sliderContestRound_" + contestId).hide();
                         }
                     },
                     error: function (error) { console.log(error); }

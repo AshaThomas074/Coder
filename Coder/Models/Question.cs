@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -45,6 +46,7 @@ namespace Coder.Models
         public string? Answer { get; set; }
 
         [Required]
+        [Display(Name ="Max Score")]
         public float? Score { get; set; }
 
         [Required]

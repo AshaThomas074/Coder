@@ -30,6 +30,8 @@ namespace Coder.Models
         public DateTime? CompletedOn { get; set; }
         [NotMapped]
         public int? StudentContestStatus { get; set; }
+        [NotMapped]
+        public double? Percent { get; set; }
         public ICollection<QuestionContestMap>? QuestionContestMaps { get; set; }
         [NotMapped]
        

@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Coder.Models.LeaderBoardModel>
+
+@{
+    ViewData["Title"] = "LeaderBoard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 0;
+}
+
+<h2>LeaderBoard</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExternalId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Score)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeTaken)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Percent)
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(++i)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExternalId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Score)
+                </td>
+                <td>
+                    @{
+                        TimeSpan time = item.TimeTaken == null ? TimeSpan.Zero : (TimeSpan)item.TimeTaken;
+                    }
+                    @{
+                        if (time.Days != 0) {
+
+                            @(time.Days.ToString("00") + " days ")
+                        }
+                        if(time.Hours != 0) {
+                            @(time.Hours.ToString("00") + "h ")
+                        }
+                        if(time.Minutes != 0)
+                        {
+                            @(time.Minutes.ToString("00") + "m ")
+                        }
+                        if(time.Seconds != 0)
+                        {
+                            @(time.Seconds.ToString("00") + "s ")
+                        }
+                        
+                }
+                    
+                    @{ /*@Html.DisplayFor(modelItem => item.TimeTaken)*/}
+                </td>
+                <td>@((int)item.Percent)%</td>
+                
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -12,12 +12,12 @@ using System.Text;
 
 namespace Coder.Controllers
 {
-    public class SolveQuestionController : Controller
+    public class DashboardStudentController : Controller
     {
         private readonly CoderDBContext _coderDBContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
-        public SolveQuestionController(CoderDBContext coderDBContext, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public DashboardStudentController(CoderDBContext coderDBContext, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _coderDBContext = coderDBContext;
             _userManager = userManager;
@@ -52,6 +52,10 @@ namespace Coder.Controllers
                                                  StudentContestStatus= (from c in _coderDBContext.StudentContestMap
                                                                         where c.UserId == userid && c.ContestId == a.ContestId 
                                                                         select c.Status
+                                                       ).FirstOrDefault(),
+                                                 Percent= (from c in _coderDBContext.StudentContestMap
+                                                           where c.UserId == userid && c.ContestId == a.ContestId
+                                                           select ((double)c.QuestionsAttended / c.TotalQuestions)*100 
                                                        ).FirstOrDefault()
                                              });
 
@@ -320,7 +324,23 @@ namespace Coder.Controllers
                             _coderDBContext.Update(questionContestModel);
                             await _coderDBContext.SaveChangesAsync();
                         }
-                        
+
+                        var map = _coderDBContext.StudentContestMap.Where(x => x.ContestId == viewModel.ContestId && x.UserId == submission.UserId).FirstOrDefault();
+                        if (map != null)
+                        {
+                            var subResult = (from a in _coderDBContext.Submission
+                                             where a.UserId == submission.UserId && a.SubmittedStatus == 1 &&
+                                             (from b in _coderDBContext.QuestionContestMap
+                                              where b.ContestId == viewModel.ContestId
+                                              select b.QuestionContestId).Contains(a.QuestionContestId)
+                                             select a).ToList();
+
+                            map.QuestionsAttended = subResult.Count;
+                            map.TotalEarnedScore = subResult.Sum(x => x.Score);
+                            _coderDBContext.Update(map);
+                            _coderDBContext.SaveChanges();
+
+                        }
                         return RedirectToAction("LoadSolveChallengePage", new { qid = viewModel.Question.QuestionId, cid = viewModel.ContestId });
                     }
                 }
@@ -389,19 +409,9 @@ namespace Coder.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
             var map=_coderDBContext.StudentContestMap.Where(x=>x.ContestId== contestId && x.UserId == userId).FirstOrDefault();
             if (map != null)
-            {
-                var submission = (from a in _coderDBContext.Submission
-                                  where a.UserId == userId && a.SubmittedStatus == 1 &&
-                                  (from b in _coderDBContext.QuestionContestMap
-                                   where b.ContestId == contestId
-                                   select b.QuestionContestId).Contains(a.QuestionContestId)
-                                  select a).ToList();
-                  
+            {                 
                 map.CompletedOn=DateTime.Now;
                 map.Status = 1;
-                map.TotalQuestions = _coderDBContext.QuestionContestMap.Where(x => x.ContestId == contestId).ToList().Count;
-                map.QuestionsAttended = submission.Count;
-                map.TotalEarnedScore = submission.Sum(x => x.Score);
                 _coderDBContext.Update(map);
                 result= _coderDBContext.SaveChanges();
             }

@@ -17,6 +17,11 @@ body {
   margin-bottom: 60px;
 }
 
+.footer {
+    position: absolute !important;
+}
+
+
 .box-shadow[b-2bos0jdq8r] {
     box-shadow: 0 .25rem .75rem #4F81BD !important;
 }
@@ -105,10 +110,10 @@ a {
 .slider {
     position: absolute;
     cursor: pointer;
-    top: 20px;
-    left: 1210px;
-    right: 5px;
-    bottom: 20px;
+    top: 37px;
+    left: 1167px;
+    right: 47px;
+    bottom: 32px;
     background-color: #ccc;
     -webkit-transition: .4s;
     transition: .4s;
@@ -156,3 +161,6 @@ input:checked + .slider:before {
 #runresult{
     margin-top:20px;
 }
+
+
+

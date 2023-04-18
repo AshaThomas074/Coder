@@ -12,12 +12,12 @@
         archivedContests = Model.Where(x => x.Status == 0).ToList();
     }
 }
-
+<link href="~/css/percent.css" rel="stylesheet" />
 <h2>Contests</h2>
 <hr />
 <br />
+<form>
 <h4>Active Contests</h4>
-<br />
 <div>
     @if (activeContests != null && activeContests.Count() > 0)
     {
@@ -35,25 +35,50 @@
                 <div class="card-body">
                     <table style="width:100%">
                         <tr>
-                            <td style="width:45%"> <h5>@item.ContestName</h5></td>
+                            <td style="width:40%"> <h5>@item.ContestName</h5></td>
                             <td style="width:15%"> @item.FinalDate</td>
                             @if (time > TimeSpan.Zero)
                             {
-                                <td style="width:20%"> @(
-                                        time.Days.ToString("00") + " days " +
-                                        time.Hours.ToString("00") + "h " +
-                                        time.Minutes.ToString("00") + "m " +
-                                        time.Seconds.ToString("00") + "s " 
-                          )</td>
+                                <td style="width:15%">
+                                    @{
+                                        if (time.Days != 0)
+                                        {
+
+                                            @(time.Days.ToString("00") + " days ")
+                                        }
+                                        if (time.Hours != 0)
+                                        {
+                                            @(time.Hours.ToString("00") + "h ")
+                                        }
+                                        if (time.Minutes != 0)
+                                        {
+                                            @(time.Minutes.ToString("00") + "m ")
+                                        }
+                                        if (time.Seconds != 0)
+                                        {
+                                            @(time.Seconds.ToString("00") + "s ")
+                                        }
+
+                                    }
+                                </td>
                             }
                             else
                             {
-                                <td style="width:20%">Not Started                                 
+                                <td style="width:15%">Not Started                                 
                                 </td>
                             }
-                            <td style="width:10%"> <a asp-action="ViewQuestions" asp-route-id="@item.ContestId" class="btn btn-primary">View Details</a></td>
+                            <td style="width:8%;">
+                                  <div class="c100 p@((int)(item.Percent)) blue">
+                                    <span>@((int)(item.Percent))%</span>
+                                     <div class="slice">
+                                        <div class="bar"></div>
+                                        <div class="fill"></div>
+                                     </div>
+                                 </div>
+                            </td>
+                            <td style="width:14%"> <a asp-action="ViewQuestions" asp-route-id="@item.ContestId" class="btn btn-primary">View Challenge</a></td>
                            
-                            <td style="width:10%">
+                            <td style="width:8%">
                                 @if (item.StudentContestStatus == 0 )
                                 {
                                 <label class="switch" >
@@ -68,24 +93,29 @@
             </div>
         }
     }
+    </div>
 
+
+    <h4 style="margin-top: 23px;">Archived Contests</h4>
     @if (archivedContests != null && archivedContests.Count() > 0)
-    {
-        <h4>Archived Contests</h4>
-        <br />
+{
+    <div>
         @foreach (var item in archivedContests)
         {
             <div class="card">
                 <div class="card-body">
                     <table style="width:100%">
                         <tr>
-                            <td style="width:60%"> <h5>@item.ContestName</h5></td>
+                            <td style="width:40%"> <h5>@item.ContestName</h5></td>
                             <td style="width:30%"> @item.FinalDate</td>
-                            <td style="width:10%"> <a asp-action="ViewQuestions" asp-route-id="@item.ContestId" class="btn btn-primary">View Details</a></td>
+                            <td style="width:10%">Ended</td>
+                            <td style="width:20%"> <a asp-action="ViewQuestions" asp-route-id="@item.ContestId" class="btn btn-primary">View Challenge</a></td>
                         </tr>
                     </table>                    
                 </div>
             </div>
         }
+    </div>
     }
-</div>
+
+    </form>

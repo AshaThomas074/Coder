@@ -158,7 +158,7 @@ namespace Coder.Controllers
             }
 
             var contest = await _context.Contest.FindAsync(id);
-            if (contest != null)
+            if (contest != null && contest.PublishedStatus != 1)
             {                
                 _context.Contest.Remove(contest);
             }
@@ -239,6 +239,7 @@ namespace Coder.Controllers
         public async Task<IActionResult> MapStudentToContest(ContestViewModel viewModel)
         {
             int? contestid = null;
+            int totalQuestion = 0;
             if (viewModel != null && viewModel.StudentContestMap != null)
             {
                 contestid = viewModel.StudentContestMap.ContestId;
@@ -248,9 +249,15 @@ namespace Coder.Controllers
                 }
                 else if (viewModel.StudentContestMap.UserId != null)
                 {
-                    
+                    var question = _context.QuestionContestMap.Where(x => x.ContestId == contestid).ToList();
+                    if(question != null)
+                    {
+                        totalQuestion=question.Count;
+                    }
                     viewModel.StudentContestMap.CreatedOn = DateTime.Now;
                     viewModel.StudentContestMap.UpdatedOn = DateTime.Now;
+                    viewModel.StudentContestMap.TotalQuestions = totalQuestion;
+                    viewModel.StudentContestMap.QuestionsAttended = 0;
                     viewModel.StudentContestMap.Status = 0;
                     _context.StudentContestMap.Add(viewModel.StudentContestMap);
                     await _context.SaveChangesAsync();
@@ -276,9 +283,12 @@ namespace Coder.Controllers
           return _context.Contest.Any(e => e.ContestId == id);
         }
 
+        [HttpPost]
         public ActionResult PublishContest(int contestId)
         {
-            var totalQuestion = _context.QuestionContestMap.Where(x => x.ContestId == contestId).ToList().Count();
+            var result = 0;
+           
+            var totalQuestion = _context.QuestionContestMap.Where(x => x.ContestId == contestId).ToList().Count;
             var contest = _context.Contest.FirstOrDefaultAsync(x => x.ContestId == contestId).Result;
             if (contest != null)
             {
@@ -286,17 +296,19 @@ namespace Coder.Controllers
                 contest.UpdatedOn= DateTime.Now;
                 _context.Update(contest);
                 _context.SaveChanges();
+                result = 1;
             }
 
             var studentContest = _context.StudentContestMap.Where(x => x.ContestId == contestId).ToList();
             foreach(var map in studentContest)
             {
                 map.TotalQuestions= totalQuestion;
+                map.QuestionsAttended= 0;
                 _context.StudentContestMap.Update(map);
                 _context.SaveChanges();
             }
 
-            return View();
+            return Json(result);
         }
     }
 }
