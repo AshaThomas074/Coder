@@ -12,14 +12,14 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ContestId" />
-            <div class="form-group">
-                <label asp-for="ContestName" class="control-label"></label>
+            <div class="form-floating">
                 <input asp-for="ContestName" class="form-control" />
+                <label asp-for="ContestName" class="control-label"></label>                
                 <span asp-validation-for="ContestName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="FinalDate" class="control-label"></label>
+            <div class="form-floating">
                 <input asp-for="FinalDate" class="form-control" />
+                <label asp-for="FinalDate" class="control-label"></label>                
                 <span asp-validation-for="FinalDate" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="UserId" />
@@ -27,14 +27,14 @@
             <input type="hidden" asp-for="CreatedOn" />
             <input type="hidden" asp-for="UpdatedOn" />
             <input type="hidden" asp-for="PublishedStatus" />
-            <div class="form-group">
+            <div class="form-floating">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
+<div style="margin-top:10px;">
     <a asp-action="Index">Back to List</a>
 </div>
 

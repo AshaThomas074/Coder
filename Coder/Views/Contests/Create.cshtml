@@ -11,27 +11,27 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ContestName" class="control-label"></label>
+            <div class="form-floating">
                 <input asp-for="ContestName" class="form-control" />
+                <label asp-for="ContestName" class="control-label"></label>                
                 <span asp-validation-for="ContestName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="FinalDate" class="control-label"></label>
+            <div class="form-floating">
                 <input asp-for="FinalDate" class="form-control" />
+                <label asp-for="FinalDate" class="control-label"></label>                
                 <span asp-validation-for="FinalDate" class="text-danger"></span>
             </div>
             
             <input type="hidden" asp-for="UserId" />               
             
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-floating" style="margin-top:10px;">
+                <input type="submit" value="Create" class="w-100 btn btn-lg btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
+<div style="margin-top:10px;">
     <a asp-action="Index">Back to List</a>
 </div>
 

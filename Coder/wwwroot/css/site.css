@@ -98,7 +98,11 @@ a {
 }
 
 .form-group{
-    margin-top:8px;
+    margin-top:3px;
+}
+
+.form-floating {
+    margin-top: 20px;
 }
 
 .switch input {
@@ -110,9 +114,9 @@ a {
 .slider {
     position: absolute;
     cursor: pointer;
-    top: 37px;
-    left: 1167px;
-    right: 47px;
+    top: 38px;
+    left: 1225px;
+    right: 54px;
     bottom: 32px;
     background-color: #ccc;
     -webkit-transition: .4s;
