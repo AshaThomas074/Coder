@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Coder.Models.StudentStatusViewModel>
+
+@{
+    ViewData["Title"] = "LeaderBoard";
+    Layout = "~/Views/Shared/_Layout.cshtml";   
+}
+
+<h2>LeaderBoard</h2>
+
+<table class="table">
+    <thead>
+        <tr>           
+            <th>
+                @Html.DisplayNameFor(model => model.StudentName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExternalId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Score)
+            </th>
+            <th>
+                TestCases Passed
+            </th>
+            <th>
+                Status
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>                
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExternalId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Score)
+                </td>
+                <td>
+                    @(item.NumberOfTestCasesPassed == "N/A" ? "N/A" : (item.NumberOfTestCasesPassed+"/"+ item.TotalTestCases))                    
+                    
+                </td>
+                <td>
+                    @{
+                        var status = "";
+                        if(item.QuestionSubmittedStatus == 1)
+                        {
+                            status = "Completed";
+                        }
+                        else if (item.ContestSubmittedStatus == 1)
+                        {
+                            if (item.IsStarted)
+                            {
+                                status = "Started but not submitted";
+                            }
+                            else
+                            {
+                                status = "Not Started";
+                            }
+                        }
+                        else if(item.IsStarted)
+                        {
+                            status = "Started";
+                        }
+                        else
+                        {
+                            status = "Not Started";
+                        }
+                    }
+
+                    @status
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="Index" asp-route-id="@Model.FirstOrDefault().ContestId">Back to List</a>
+</div>
+

@@ -1,0 +1,40 @@
+﻿
+.toggled-on .toggle-content {
+    display: block;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.toggle-content {
+    box-shadow: inset 0px 0px 10px #0c0b41;
+}
+
+    .toggle-content p {
+        margin: 15px 0 15px 0;
+    }
+
+.toggled-on .fa-angle-down {
+    display: none;
+}
+
+.toggle-title {
+    cursor: pointer;
+    position: relative;
+    padding-left: 55px;
+   
+}
+
+    .toggle-title i {
+        position: absolute;
+        left: 0;
+        font-size: 2.5em;
+    }
+
+.toggled-off .toggle-content {
+    display: none;
+}
+
+.toggled-off .fa-angle-up {
+    display: none;
+}

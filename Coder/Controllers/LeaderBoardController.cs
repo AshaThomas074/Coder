@@ -49,7 +49,7 @@ namespace Coder.Controllers
                               ExternalId= a.User != null ? a.User.UserExternalId : "",
                               Score=a.TotalEarnedScore,
                               TimeTaken=(a.CompletedOn-a.StartedOn),
-                              Percent = (double)a.QuestionsAttended / a.TotalQuestions * 100
+                              Percent = a.QuestionsAttended != null ? (double)a.QuestionsAttended / a.TotalQuestions * 100 : 0,
                           }).ToList().OrderByDescending(b=>b.Score).OrderBy(c=>c.TimeTaken);
             return View("LeaderBoard",result);
         }

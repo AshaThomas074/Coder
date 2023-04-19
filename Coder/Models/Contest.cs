@@ -32,6 +32,8 @@ namespace Coder.Models
         public int? StudentContestStatus { get; set; }
         [NotMapped]
         public double? Percent { get; set; }
+        [NotMapped]
+        public bool DivOpenStatus { get; set; }
         public ICollection<QuestionContestMap>? QuestionContestMaps { get; set; }
         [NotMapped]
        
@@ -41,6 +43,8 @@ namespace Coder.Models
         [NotMapped]
         public IEnumerable<Question>? questionList { get; set; }
         public ICollection<StudentContestMap>? StudentContestMaps { get; set; }
+        [NotMapped]
+        public IEnumerable<QuestionContestMap>? QuestionContestList { get; set; }
 
     }
 }
