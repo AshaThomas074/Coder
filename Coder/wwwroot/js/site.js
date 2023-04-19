@@ -53,7 +53,6 @@ $(document).ready(function () {
             contestId = $(this).attr("data-contestid");
             if (confirm("Are you sure you want to submit this contest?")) {
 
-/*
                 $.ajax({
                     type: 'POST',
                     url: '/DashboardStudent/UpdateStudentContestFinishStatus?contestId=' + contestId,
@@ -65,7 +64,7 @@ $(document).ready(function () {
                         }
                     },
                     error: function (error) { console.log(error); }
-                });*/
+                });
             }
             else {
                 $(this).prop('checked', false);
