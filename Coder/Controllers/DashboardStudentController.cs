@@ -1,5 +1,6 @@
 ﻿using Coder.Data;
 using Coder.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using System.Text;
 
 namespace Coder.Controllers
 {
+    [Authorize]
     public class DashboardStudentController : Controller
     {
         private readonly CoderDBContext _coderDBContext;

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Coder.Controllers
 {
+    [Authorize]
     public class QuestionController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

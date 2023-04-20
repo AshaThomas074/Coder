@@ -5,9 +5,11 @@ using Coder.Data;
 using Coder.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Coder.Controllers
 {
+    [Authorize]
     public class ContestsController : Controller
     {
         private readonly CoderDBContext _context;
