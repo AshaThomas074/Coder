@@ -53,14 +53,16 @@ namespace Coder.Controllers
         // GET: QuestionController/Create
         public ActionResult Create()
         {
-            Question question = new Question();
-            question.UserId = _userManager.GetUserId(HttpContext.User);
-            question.difficulties = _coderDBContext.QuestionDifficulty.Select(x => new SelectListItem
+            Question question = new()
             {
-                Text = x.DifficultyName,
-                Value = x.DifficultyId.ToString()
-            });
-            question.LanguagesList = _coderDBContext.Language.ToList();
+                UserId = _userManager.GetUserId(HttpContext.User),
+                difficulties = _coderDBContext.QuestionDifficulty.Select(x => new SelectListItem
+                {
+                    Text = x.DifficultyName,
+                    Value = x.DifficultyId.ToString()
+                }),
+                LanguagesList = _coderDBContext.Language.ToList()
+            };
 
             return View(question);
         }
@@ -156,13 +158,9 @@ namespace Coder.Controllers
         {
             if (id > 0)
             {
-               Question? question= _coderDBContext.Question.FindAsync(id).Result;
+                Question? question = _coderDBContext.Question.FindAsync(id).Result;
                 if(question != null)
-                {
-                    //question.Status = 0;
-                    //question.UpdatedOn = DateTime.Now;
-                    //_coderDBContext.Update(question);
-
+                {                    
                     _coderDBContext.Remove(question);
                     await _coderDBContext.SaveChangesAsync();
                 }

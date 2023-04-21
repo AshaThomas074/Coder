@@ -68,8 +68,8 @@
                                 </td>
                             }
                             <td style="width:8%;">
-                                  <div class="c100 p@((int)(item.Percent)) blue">
-                                    <span>@((int)(item.Percent))%</span>
+                                    <div class="c100 p@(item.Percent != null ? (int)(item.Percent) : 0) blue">
+                                        <span>@(item.Percent != null ? (int)(item.Percent) : 0)%</span>
                                      <div class="slice">
                                         <div class="bar"></div>
                                         <div class="fill"></div>

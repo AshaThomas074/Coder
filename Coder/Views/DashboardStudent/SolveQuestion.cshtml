@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     int? NumberOfTestCasesPassed = null;
     int? TotalTestCases = null;
+    string InitialCode = "";
     if (Model != null && Model.Submission != null)
     {
         TotalTestCases = Model.Submission.TotalTestCases;
@@ -17,7 +18,7 @@
     #editor {
         position: absolute;
         top: 162px;
-        right: 39px;
+        right: 15px;
         bottom: 139px;
         left: 695px;
         height: 400px;
@@ -92,7 +93,7 @@
         <div class="col">
 
             <form id="answer" method="post">
-                <div class="form-floating">
+                <div class="form-group">
                     <select name="codelanguage" id="codelanguage" class="select-right">
                         @if (Model.LanguagesList != null && Model.LanguagesList.Count() > 0)
                         {
@@ -103,6 +104,8 @@
                                     if (item.LanguageId == Model.Submission.LanguageId)
                                     {
                                         <option value="@item.LanguageId" selected>@item.LanguageName</option>
+                                        Model.JDoodleLanguageCode = item.JDoodleLanguageCode;
+                                        Model.VersionIndex = item.VersionIndex.ToString();
                                     }                                    
                                 }
                             }
@@ -113,6 +116,9 @@
                                     if (item.LanguageName != null && item.LanguageName.Equals("Java"))
                                     {
                                         <option value="@item.LanguageId" selected>@item.LanguageName</option>
+                                        InitialCode = item.InitialCode != null ? item.InitialCode : "";
+                                        Model.JDoodleLanguageCode = item.JDoodleLanguageCode;
+                                        Model.VersionIndex = item.VersionIndex.ToString();
                                     }
                                     else
                                     {
@@ -129,7 +135,12 @@
                         @if (Model.Submission != null && !string.IsNullOrEmpty(Model.Submission.SubmissionContent))
                         {
                             @Model.Submission.SubmissionContent
-                        }                        
+                        }
+                        else
+                        {
+                            @InitialCode
+                        }
+
                     </div>
                 </div>
                 @if (Model != null && Model.Submission != null && Model.Question != null)
@@ -164,6 +175,7 @@
 
 <!-- <script src="~/js/ace.js" type="text/javascript" charset="utf-8"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.3/ace.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.js"></script>
 <script src="~/js/solve-challenge.js" type="text/javascript"></script>
 
 
