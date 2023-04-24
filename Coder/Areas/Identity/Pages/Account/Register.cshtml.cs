@@ -143,7 +143,7 @@ namespace Coder.Areas.Identity.Pages.Account
             {
                 Input = new InputModel()
                 {
-                    RoleList = _roleManager.Roles.Select(x => x.Name).Select(item => new SelectListItem
+                    RoleList = _roleManager.Roles.Select(x => x.Name).Where(x => x.Equals("Teacher")).Select(item => new SelectListItem
                     {
                         Text = item,
                         Value = item
@@ -154,7 +154,7 @@ namespace Coder.Areas.Identity.Pages.Account
             {
                 Input = new InputModel()
                 {
-                    RoleList = _roleManager.Roles.Select(x => x.Name).Where(x => x.Equals("Student")).Select(item => new SelectListItem
+                    RoleList = _roleManager.Roles.Select(x => x.Name).Where(x => x.Equals("Student") || x.Equals("Teaching Assistant")).Select(item => new SelectListItem
                     {
                         Text = item,
                         Value = item
@@ -185,7 +185,7 @@ namespace Coder.Areas.Identity.Pages.Account
                 user.FirstName= Input.FirstName;
                 user.LastName= Input.LastName;
                 user.UserExternalId = Input.UserExternalId;
-                user.StudentBatchId= Input.StudentBatchId;
+                user.StudentBatchId= Input.StudentBatchId == 0 ? null : Input.StudentBatchId;
                 user.CreatedOn= DateTime.Now;
                 user.UpdatedOn= DateTime.Now;
                 user.CreatedBy = User.FindFirstValue(ClaimTypes.NameIdentifier);//get the Id of loggined user
@@ -215,8 +215,7 @@ namespace Coder.Areas.Identity.Pages.Account
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
                     else
-                    {
-                        //await _signInManager.SignInAsync(user, isPersistent: false);
+                    {                        
                         return LocalRedirect(returnUrl);
                     }
                 }
@@ -225,6 +224,35 @@ namespace Coder.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
+
+            if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+            {
+                Input = new InputModel()
+                {
+                    RoleList = _roleManager.Roles.Select(x => x.Name).Where(x => x.Equals("Teacher")).Select(item => new SelectListItem
+                    {
+                        Text = item,
+                        Value = item
+                    })
+                };
+            }
+            else
+            {
+                Input = new InputModel()
+                {
+                    RoleList = _roleManager.Roles.Select(x => x.Name).Where(x => x.Equals("Student") || x.Equals("Teaching Assistant")).Select(item => new SelectListItem
+                    {
+                        Text = item,
+                        Value = item
+                    })
+                };
+            }
+
+            Input.StudentBatchList = _coderDBContest.StudentBatch.Select(x => new SelectListItem
+            {
+                Text = x.StudentBatchName,
+                Value = x.StudentBatchId.ToString()
+            });
 
             // If we got this far, something failed, redisplay form
             return Page();

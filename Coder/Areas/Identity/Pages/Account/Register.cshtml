@@ -1,5 +1,7 @@
 ﻿@page
+@using Coder.Models;
 @model RegisterModel
+@inject SignInManager<ApplicationUser> SignInManager
 @{
     ViewData["Title"] = "Register";
 }
@@ -51,14 +53,23 @@
                 <span asp-validation-for="Input.Role" class="text-danger"></span>
             </div>
 
+            @if (SignInManager.IsSignedIn(User))
+            {
+                @if (User.IsInRole("Teacher"))
+                {
                     <div class="form-floating" id="divBatch">
-                        <select asp-for="Input.StudentBatchId" asp-items="@Model.Input.StudentBatchList" id="ddlBatch" class="form-select" aria-required="true">
+                        <select asp-for="Input.StudentBatchId" asp-items="@Model.Input.StudentBatchList" id="ddlBatch" class="form-select">
                             <option disabled selected>Select Batch</option>
                         </select>
-                <label asp-for="Input.StudentBatchId">Batch</label>
+                        <label asp-for="Input.StudentBatchId">Batch</label>
                         <span asp-validation-for="Input.StudentBatchId" class="text-danger"></span>
                     </div>
+                }
+            }
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+           
+            <input type="hidden" asp-for="Input.StudentBatchId" id="hdnStudBatchId"/>
+            
         </form>
     </div>
     <div class="col-md-4"></div>

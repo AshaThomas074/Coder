@@ -11,8 +11,6 @@ namespace Coder.Models
         public DateTime UpdatedOn { get; set; } = DateTime.Now;
         public string? UserExternalId { get; set; }
         public string? CreatedBy { get; set; }
-
-        [ForeignKey("StudentBatch")]
         public int? StudentBatchId { get; set; }
         public StudentBatch? StudentBatch { get; set; }
         public ICollection<QuestionContestMap>? ContestMaps { get; set; }

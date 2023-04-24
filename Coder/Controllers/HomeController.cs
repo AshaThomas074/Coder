@@ -22,7 +22,7 @@ namespace Coder.Controllers
             {
                 if (User.IsInRole("Admin"))
                 {
-                    return RedirectToAction("Index", "Home");
+                    //return RedirectToAction("Index", "Home");
                 }
                 else if (User.IsInRole("Teacher"))
                 {
