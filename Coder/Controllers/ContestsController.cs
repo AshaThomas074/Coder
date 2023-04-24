@@ -55,8 +55,7 @@ namespace Coder.Controllers
                             SqlDbType =  System.Data.SqlDbType.Int,
                             Direction = System.Data.ParameterDirection.Input,
                             Value = id
-                        }};
-                List<Question> questionList = _context.Question.FromSqlRaw("[dbo].[GetQuestionsNotMapped] @UserId, @ContestId", param).ToList();
+                        }};               
 
                 contest.questionsDDL = (from a in _context.Question
                                         where a.UserId == userId &&
@@ -67,13 +66,7 @@ namespace Coder.Controllers
                                         {
                                             Text = a.QuestionHeading + "(" + (a.QuestionDifficulty != null ? a.QuestionDifficulty.DifficultyName : "") + ")",
                                             Value = a.QuestionId.ToString()
-                                        });
-
-           /*   contest.questionsDDL = questionList.Select(x => new SelectListItem()
-              {
-                  Text = x.QuestionHeading + "(" + (x.QuestionDifficulty != null ? x.QuestionDifficulty.DifficultyName : "") + ")",
-                  Value = x.QuestionId.ToString()
-              });*/
+                                        });    
 
                 contest.questionList = _context.Question.FromSqlRaw("[dbo].[GetQuestionsMapped] @UserId, @ContestId", param).ToList();
             }
