@@ -30,11 +30,19 @@ $(document).ready(function () {
 
     //code for contest ends
 
+
     $("#divBatch").hide();
+
+    if ($("#ddlRole option:selected").text() == "Student") {
+        $("#divBatch").show();
+    }
 
     $("#ddlRole").on("change", function () {
         if ($("#ddlRole option:selected").text() == "Student") {
             $("#divBatch").show();
+        }
+        else {
+            $("#divBatch").hide();
         }
     
          });
@@ -44,6 +52,10 @@ $(document).ready(function () {
             if ($("#ddlBatch").val() == "") {
                 return false;
             }
+            $("#hdnStudBatchId").val($("#ddlBatch").val());
+        }
+        else {
+            $("#hdnStudBatchId").val(0);
         }
     });
 
