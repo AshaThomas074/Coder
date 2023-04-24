@@ -58,11 +58,22 @@ namespace Coder.Controllers
                         }};
                 List<Question> questionList = _context.Question.FromSqlRaw("[dbo].[GetQuestionsNotMapped] @UserId, @ContestId", param).ToList();
 
-                contest.questionsDDL = questionList.Select(x => new SelectListItem()
-                {
-                    Text = x.QuestionHeading,
-                    Value = x.QuestionId.ToString()
-                });
+                contest.questionsDDL = (from a in _context.Question
+                                        where a.UserId == userId &&
+                                        !(from b in _context.QuestionContestMap
+                                          where b.UserId == userId && b.ContestId == id
+                                          select b.QuestionId).Contains(a.QuestionId)
+                                        select new SelectListItem
+                                        {
+                                            Text = a.QuestionHeading + "(" + (a.QuestionDifficulty != null ? a.QuestionDifficulty.DifficultyName : "") + ")",
+                                            Value = a.QuestionId.ToString()
+                                        });
+
+           /*   contest.questionsDDL = questionList.Select(x => new SelectListItem()
+              {
+                  Text = x.QuestionHeading + "(" + (x.QuestionDifficulty != null ? x.QuestionDifficulty.DifficultyName : "") + ")",
+                  Value = x.QuestionId.ToString()
+              });*/
 
                 contest.questionList = _context.Question.FromSqlRaw("[dbo].[GetQuestionsMapped] @UserId, @ContestId", param).ToList();
             }
