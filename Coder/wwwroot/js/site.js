@@ -111,4 +111,10 @@ $(document).ready(function () {
         }
     });
 
+    window.setTimeout(function () {
+        $(".alert").hide();
+    }, 5000); 
+
+    
+
 });

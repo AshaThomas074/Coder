@@ -1,0 +1,142 @@
+﻿@model BulkUploadModel 
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<style>
+    .form-control{
+        width:30%;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+      /*  var students = new Array();
+        $("#tblStudents").find("tr:gt(0)").each(function () {
+            var FirstName = $(this).find("td:eq(0)").text();
+            var LastName = $(this).find("td:eq(1)").text();
+            var Email = $(this).find("td:eq(2)").text();
+            var UserExternalId = $(this).find("td:eq(3)").text();
+            var Password = $(this).find("td:eq(4)").text();
+            var StudentBatchName = $(this).find("td:eq(5)").text();
+
+            var student = {};
+            student.FirstName = FirstName;
+            student.LastName = LastName;
+            student.Email = Email;
+            student.UserExternalId = UserExternalId;
+            student.PasswordHash = Password;
+            student.StudentBatchName = StudentBatchName;
+            students.push(student);
+
+
+
+        }); */
+
+      /*  $("#btnSaveStudents").on("click", function () {
+            console.log(students);
+
+            $.ajax({
+
+                type: "POST",
+                url: '/BulkUpload/SaveAllTheStudents?students='+students,
+                //contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                //data: { "students": students };,
+                success: function (response) {
+                    alert("succ");
+                },
+                error: function (error) {
+                    alert("error");
+                    console.log(error);
+                }
+            });
+        });*/
+
+    }); 
+</script>
+<div class="text-center">
+    <form action="download">
+    <p>If you want to download the template for bulk upload, please click the button given &nbsp;
+            <button type="submit" class="btn btn-outline-primary" asp-action="download">Download Template</button>
+    </p>
+    </form>
+</div>
+<hr />
+@if (Model != null && Model.Response != null)
+{
+    if(Model.Response.IsSuccess)
+    {
+        <div class="alert alert-success" role="alert">            
+            @Model.Response.Message
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            @Model.Response.Message
+        </div>
+    }
+}
+
+<div class="form-floating">
+    <form asp-controller="BulkUpload" asp-action="Index" method="post" enctype="multipart/form-data">
+        <label class="col-form-label">Select File</label>
+        <input type="file" class="form-control" name="file" />
+        <input type="submit" value="Upload" class="btn btn-primary" />     
+    </form>
+</div>
+
+@if (Model != null && Model.Users != null && Model.Users.Count() > 0)
+{
+    <hr />
+
+    <h2>List of Students</h2>
+
+    <div>
+        <form asp-controller="BulkUpload" asp-action="SaveAllTheStudents" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="@Model.FileName">
+        <input type="submit" value="Save All Students" id="btnSaveStudents" class="btn btn-primary" />
+        </form>
+    </div>
+
+    <table class="table" id="tblStudents">
+        <thead>
+            <tr>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Email</th>
+                <th>External ID</th>
+                <th>Password</th>
+                <th>Student Batch</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Users)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem=>item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem=>item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem=>item.UserExternalId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem=>item.PasswordHash)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem=>item.StudentBatchName)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

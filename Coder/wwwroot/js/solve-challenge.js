@@ -25,47 +25,7 @@ window.setTimeout(function () {
     });
 
     $("#btncodeRun").on("click", function (e) {      
-        $("#hdnSubmissionContent").val(editor.getValue());
-        /*
-        viewModel.ContestId = 0;
-        viewModel.JDoodleLanguageCode = $("#hdnLangCode").val();
-        viewModel.VersionIndex = $("#hdnVersionIndex").val();
-        viewModel['Question'] = [];
-        var obj = {
-            'QuestionId': $("#hdnQuestionId").val()
-        };
-        viewModel['Question'].push(obj);
-        viewModel['Submission'] = [];
-        var obj = {
-            'SubmissionId': $("#hdnSubmissionId").val(),
-            'LanguageId': $("#hdnSelectedLanguage").val(),
-            'UserId': $("#hdnUserId").val(),
-            'QuestionContestId': $("#hdnQuestionContestId").val(),
-            'SubmissionContent': editor.getValue(),
-            'CreatedOn': $("#hdnCreatedOn").val(),
-        };
-        viewModel['Submission'].push(obj);
-        viewModel['LanguagesList'] = null;
-        viewModel['QuestionViewModel'] = null;
-
-        console.log(viewModel); 
-        var p = $(this).attr('data-pdetail');
-        $.ajax({
-            type: 'POST',
-            url: 'CompileCode',
-            contentType: 'application/json',
-            data: {
-                "viewModel": JSON.stringify(p)
-            },
-            dataType: 'json',
-            success: function (response) {
-                if (response != null) {
-                    
-                    console.log(response);
-                }
-            },
-            error: function (error) { console.log(error); }
-        });*/
+        $("#hdnSubmissionContent").val(editor.getValue());       
     });
 }, 0); 
 

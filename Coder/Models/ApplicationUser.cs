@@ -18,6 +18,8 @@ namespace Coder.Models
         public ICollection<Question>? Questions { get; set; }
         public ICollection<StudentContestMap>? StudentContestMaps { get; set; }
         public ICollection<Submission>? Submissions { get; set;}
+        [NotMapped]
+        public string? StudentBatchName { get; set; }
         
     }
 }
