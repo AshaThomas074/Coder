@@ -63,6 +63,18 @@
                                     <a class="nav-link text-dark" asp-controller="LeaderBoard" asp-action="Index">LeaderBoard</a>
                                 </li>
                             }
+                            if (User.IsInRole("Teaching Assistant"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="DashboardTeacher" asp-action="Index">Home</a>
+                                </li>                               
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" id="contest" asp-controller="Contests" asp-action="Index">Contest</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" id="question" asp-controller="Question" asp-action="Index">Question</a>
+                                </li>
+                            }
 
                         }
                         

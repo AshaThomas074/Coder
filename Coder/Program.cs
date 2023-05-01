@@ -6,7 +6,9 @@ using Coder.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddNewtonsoftJson();
+
+builder.Services.AddSession();
 
 builder.Services.AddDbContext<CoderDBContext>(opt =>
 opt.UseSqlServer(builder.Configuration.GetConnectionString("CoderConn")),ServiceLifetime.Transient);
@@ -20,8 +22,8 @@ opt.UseSqlServer(builder.Configuration.GetConnectionString("CoderConn")),Service
 builder.Services.AddDefaultIdentity<ApplicationUser>()
            .AddRoles<IdentityRole>()
            .AddEntityFrameworkStores<CoderDBContext>();
-          
-           
+
+
 
 var app = builder.Build();
 
@@ -43,7 +45,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();;
 app.UseAuthorization();
-
+app.UseSession();
 app.UseEndpoints(endpoints => endpoints.MapRazorPages());
 //app.MapRazorPages();
 

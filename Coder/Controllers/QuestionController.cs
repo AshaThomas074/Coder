@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Coder.Controllers
 {
@@ -28,9 +31,18 @@ namespace Coder.Controllers
             {
                 var userId = _userManager.GetUserId(HttpContext.User);
                 ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
-                //var teacherId = user.CreatedBy;
-                var questions=await _coderDBContext.Question.Where(x => x.UserId == userId && x.Status == 1).ToListAsync(); //questions by teacherid for teacher
-               // var questions = await _coderDBContext.Question.ToListAsync(); //questions by teacherid for teacher
+
+                string temp = HttpContext.Session.GetString("users");
+                var users = JsonConvert.DeserializeObject<List<string>>(temp);
+                if (users == null)
+                {
+                    users = new List<string>
+                    {
+                        userId
+                    };
+                }
+                    
+                var questions=await _coderDBContext.Question.Where(x => users.Contains(x.UserId) && x.Status == 1).ToListAsync(); //questions by teacherid for teacher
                 return View(questions);
             }
             catch (Exception )

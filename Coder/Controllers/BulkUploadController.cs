@@ -20,30 +20,20 @@ namespace Coder.Controllers
         IConfiguration configuration;
         IWebHostEnvironment hostEnvironment;
         IExcelDataReader reader;
-        private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
-        private readonly Microsoft.AspNetCore.Identity.IUserStore<ApplicationUser> _userStore;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-        private readonly Microsoft.AspNetCore.Identity.RoleManager<IdentityRole> _roleManager;
         private readonly CoderDBContext _coderDBContext;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
         public BulkUploadController(IConfiguration configuration,
             IWebHostEnvironment hostEnvironment,
             UserManager<ApplicationUser> userManager,
             CoderDBContext coderDBContext,
-            RoleManager<IdentityRole> roleManager,
-            IEmailSender emailSender,
-            IUserStore<ApplicationUser> userStore,
-            IPasswordHasher<ApplicationUser> passwordHasher,
-            SignInManager<ApplicationUser> signInManager)
+            IPasswordHasher<ApplicationUser> passwordHasher)
         {
             this.configuration = configuration;
             this.hostEnvironment = hostEnvironment;
             this._userManager = userManager;
             _coderDBContext = coderDBContext;
-            _roleManager = roleManager;
-            _emailSender = emailSender;
-            _userStore = userStore;
             _passwordHasher = passwordHasher;
         }
         [HttpGet]
@@ -51,7 +41,6 @@ namespace Coder.Controllers
         {
             if (TempData["model"] != null)
             {
-                //bulkupload = JsonConvert.DeserializeObject<BulkUploadModel>TempData["model"];
                 bulkupload = JsonConvert.DeserializeObject<BulkUploadModel>(TempData["model"].ToString());
                 TempData["model"] = null;
             }

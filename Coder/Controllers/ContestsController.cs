@@ -6,6 +6,8 @@ using Coder.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace Coder.Controllers
 {
@@ -27,7 +29,19 @@ namespace Coder.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
-            return View(await _context.Contest.Where(x=>x.UserId == userId).OrderByDescending(y=>y.Status).ToListAsync());
+
+            string temp = HttpContext.Session.GetString("users");
+            var users = JsonConvert.DeserializeObject<List<string>>(temp);
+
+            if (users == null)
+            {
+                users = new List<string>
+                    {
+                        userId
+                    };
+            }           
+
+            return View(await _context.Contest.Where(x => users.Contains(x.UserId)).OrderByDescending(y => y.Status).ToListAsync());
         }
 
         // GET: Contests/Details/5
@@ -38,11 +52,20 @@ namespace Coder.Controllers
                 return NotFound();
             }
             var userId = _userManager.GetUserId(HttpContext.User);
+            string temp = HttpContext.Session.GetString("users");
+            var users = JsonConvert.DeserializeObject<List<string>>(temp);
+            if (users == null)
+            {
+                users = new List<string>
+                    {
+                        userId
+                    };
+            }            
 
             var contest = await _context.Contest.FirstOrDefaultAsync(m => m.ContestId == id);
             if(contest != null)
             { 
-                var param = new SqlParameter[] {
+               /* var param = new SqlParameter[] {
                         new SqlParameter() {
                             ParameterName = "@UserId",
                             SqlDbType =  System.Data.SqlDbType.VarChar,
@@ -55,20 +78,27 @@ namespace Coder.Controllers
                             SqlDbType =  System.Data.SqlDbType.Int,
                             Direction = System.Data.ParameterDirection.Input,
                             Value = id
-                        }};               
-
+                        }};   */            
+                //all questions which is not mapped
                 contest.questionsDDL = (from a in _context.Question
-                                        where a.UserId == userId &&
+                                        where users.Contains(a.UserId) &&
                                         !(from b in _context.QuestionContestMap
-                                          where b.UserId == userId && b.ContestId == id
+                                          where users.Contains(b.UserId) && b.ContestId == id
                                           select b.QuestionId).Contains(a.QuestionId)
                                         select new SelectListItem
                                         {
                                             Text = a.QuestionHeading + "(" + (a.QuestionDifficulty != null ? a.QuestionDifficulty.DifficultyName : "") + ")",
                                             Value = a.QuestionId.ToString()
-                                        });    
+                                        });
 
-                contest.questionList = _context.Question.FromSqlRaw("[dbo].[GetQuestionsMapped] @UserId, @ContestId", param).ToList();
+                //get all questions which is mapped
+                contest.questionList = (from a in _context.Question
+                                        where users.Contains(a.UserId) &&
+                                        (from b in _context.QuestionContestMap
+                                         where users.Contains(b.UserId) && b.ContestId == id
+                                         select b.QuestionId).Contains(a.QuestionId)
+                                        select a).ToList();
+                //contest.questionList = _context.Question.FromSqlRaw("[dbo].[GetQuestionsMapped] @UserId, @ContestId", param).ToList();
             }
             else
             {
@@ -165,7 +195,25 @@ namespace Coder.Controllers
 
             var contest = await _context.Contest.FindAsync(id);
             if (contest != null && contest.PublishedStatus != 1)
-            {                
+            {
+                var studConMap = _context.StudentContestMap.Where(x => x.ContestId == id).ToList();
+                if(studConMap != null && studConMap.Count > 0)
+                {
+                    foreach(var stud in studConMap)
+                    {
+                        _context.StudentContestMap.Remove(stud);
+                    }
+                }
+
+                var questMap = _context.QuestionContestMap.Where(x => x.ContestId == id).ToList();
+                if (questMap != null && questMap.Count > 0)
+                {
+                    foreach (var quest in questMap)
+                    {
+                        _context.QuestionContestMap.Remove(quest);
+                    }
+                }
+
                 _context.Contest.Remove(contest);
             }
 
@@ -187,9 +235,19 @@ namespace Coder.Controllers
 
         public async Task<IActionResult> DeleteQuestionContestMaping(int Cid,int Qid)
         {
-            var userid = _userManager.GetUserId(HttpContext.User);
+            var userid = _userManager.GetUserId(HttpContext.User);          
+            string temp = HttpContext.Session.GetString("users");
+            var users = JsonConvert.DeserializeObject<List<string>>(temp);
+            if (users == null)
+            {
+                users = new List<string>
+                    {
+                        userid
+                    };
+            }
+            
             var questioncontestmap = await _context.QuestionContestMap.
-                Where(x => x.ContestId == Cid && x.QuestionId == Qid && x.UserId == userid).
+                Where(x => x.ContestId == Cid && x.QuestionId == Qid && users.Contains(x.UserId)).
                 FirstOrDefaultAsync();
             if (questioncontestmap != null)
             {
@@ -316,5 +374,6 @@ namespace Coder.Controllers
 
             return Json(result);
         }
+        
     }
 }

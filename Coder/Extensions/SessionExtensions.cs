@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Coder.Models
+namespace Coder.Extensions
 {
     public static class SessionExtensions
     {

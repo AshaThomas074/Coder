@@ -3,6 +3,8 @@ using Coder.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Coder.Controllers
 {
@@ -11,21 +13,30 @@ namespace Coder.Controllers
     {
         private readonly CoderDBContext _coderDBContext;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IConfiguration _configuration;
-        public DashboardTeacherController(CoderDBContext coderDBContext, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public DashboardTeacherController(CoderDBContext coderDBContext, UserManager<ApplicationUser> userManager)
         {
             _coderDBContext = coderDBContext;
-            _userManager = userManager;
-            _configuration = configuration;
+            _userManager = userManager;            
         }
         public IActionResult Index(int? id)
         {
             var userid = _userManager.GetUserId(HttpContext.User);
             var user = _userManager.FindByIdAsync(userid);
 
+            string temp = HttpContext.Session.GetString("users");
+            var users = JsonConvert.DeserializeObject<List<string>>(temp);
+            if (users == null)
+            {
+                users = new List<string>
+                    {
+                        userid
+                    };
+            }
+            //var users = GetAccountStatus();
+
             IEnumerable<Contest> contest = (from a in _coderDBContext.Contest
                                             where a.PublishedStatus == 1 &&
-                                            a.UserId == userid
+                                            users.Contains(a.UserId)
                                             select new Contest
                                             {
                                                 ContestId = a.ContestId,
@@ -44,11 +55,11 @@ namespace Coder.Controllers
                                                                            StartedCount = b.StartedCount,
                                                                            CompletedCount = b.CompletedCount,
                                                                            QuestionId = b.QuestionId,
-                                                                           QuestionContestId= b.QuestionContestId
+                                                                           QuestionContestId = b.QuestionContestId
                                                                        }).ToList()
                                             });
 
-            return View(contest);            
+            return View(contest);
         }
 
         public IActionResult GetLeaderBoard(int id)
@@ -112,6 +123,41 @@ namespace Coder.Controllers
 
             var result = result1.Union(result2).OrderBy(x=>x.StudentName);
             return View("StudentQuestionStatus",result);
+        }
+
+        private List<string> GetAccountStatus()
+        {
+            List<string> users = new();
+            var userId = _userManager.GetUserId(HttpContext.User);
+
+            if (User.IsInRole("Teacher"))
+            {
+                users = (from a in _coderDBContext.UserRoles
+                         where (from c in _coderDBContext.Roles
+                                where c.Name == "Teaching Assistant"
+                select c.Id).Contains(a.RoleId)
+                         && (from b in _coderDBContext.Users
+                             where b.CreatedBy == userId
+                             select b.Id).Contains(a.UserId)
+                         select a.UserId).ToList();
+                users.Add(userId);
+            }
+            else if (User.IsInRole("Teaching Assistant"))
+            {
+                var user = _userManager.FindByIdAsync(userId);
+                users = (from a in _coderDBContext.UserRoles
+                         where (from c in _coderDBContext.Roles
+                                where c.Name == "Teaching Assistant"
+                                select c.Id).Contains(a.RoleId)
+                         && (from b in _coderDBContext.Users
+                             where b.CreatedBy == user.Result.CreatedBy
+                             select b.Id).Contains(a.UserId)
+                         select a.UserId).ToList();
+
+                users.Add(user.Result.CreatedBy);
+            }
+
+            return users;
         }
     }
 }
