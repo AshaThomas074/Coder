@@ -21,7 +21,6 @@ namespace Coder.Controllers
         IWebHostEnvironment hostEnvironment;
         IExcelDataReader reader;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly CoderDBContext _coderDBContext;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
         public BulkUploadController(IConfiguration configuration,
@@ -36,6 +35,7 @@ namespace Coder.Controllers
             _coderDBContext = coderDBContext;
             _passwordHasher = passwordHasher;
         }
+
         [HttpGet]
         public IActionResult Index(BulkUploadModel bulkupload = null)
         {
