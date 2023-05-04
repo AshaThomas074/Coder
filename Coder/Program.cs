@@ -19,7 +19,7 @@ opt.UseSqlServer(builder.Configuration.GetConnectionString("CoderConnProd")), Se
 else
 {
     builder.Services.AddDbContext<CoderDBContext>(opt =>
-opt.UseSqlServer(builder.Configuration.GetConnectionString("CoderConnProd")), ServiceLifetime.Transient);
+opt.UseSqlServer(builder.Configuration.GetConnectionString("CoderConn")), ServiceLifetime.Transient);
 }
 
 builder.Services.AddDefaultIdentity<ApplicationUser>()
