@@ -10,14 +10,17 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson();
 
 builder.Services.AddSession();
 
-builder.Services.AddDbContext<CoderDBContext>(opt =>
-opt.UseSqlServer(builder.Configuration.GetConnectionString("CoderConn")),ServiceLifetime.Transient);
 
-//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-// .AddEntityFrameworkStores<CoderDBContext>();
-/*builder.Services.AddDefaultIdentity<ApplicationUser>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<CoderDBContext>();*/
+if (builder.Environment.IsProduction())
+{
+    builder.Services.AddDbContext<CoderDBContext>(opt =>
+opt.UseSqlServer(builder.Configuration.GetConnectionString("CoderConnProd")), ServiceLifetime.Transient);
+}
+else
+{
+    builder.Services.AddDbContext<CoderDBContext>(opt =>
+opt.UseSqlServer(builder.Configuration.GetConnectionString("CoderConnProd")), ServiceLifetime.Transient);
+}
 
 builder.Services.AddDefaultIdentity<ApplicationUser>()
            .AddRoles<IdentityRole>()
@@ -26,6 +29,12 @@ builder.Services.AddDefaultIdentity<ApplicationUser>()
 
 
 var app = builder.Build();
+/*
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CoderDBContext>();
+    db.Database.Migrate();
+}*/
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
