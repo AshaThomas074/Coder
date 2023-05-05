@@ -127,6 +127,7 @@ namespace Coder.Controllers
                 contest.UpdatedOn= DateTime.Now;
                 contest.Status = 1;
                 contest.PublishedStatus = 0;
+                contest.FinalDate = contest.FinalDate.AddHours(23).AddMinutes(59).AddSeconds(59);
                 _context.Add(contest);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -165,6 +166,7 @@ namespace Coder.Controllers
                 try
                 {
                     contest.UpdatedOn = DateTime.Now;
+                    contest.FinalDate = contest.FinalDate.AddHours(23).AddMinutes(59).AddSeconds(59);
                     _context.Contest.Update(contest);
                     await _context.SaveChangesAsync();
                 }
@@ -297,6 +299,10 @@ namespace Coder.Controllers
 
             contestViewModel.StudentContestMap = new StudentContestMap();
             contestViewModel.StudentContestMap.ContestId= id;
+
+            var contestObj = _context.Contest.Where(x => x.ContestId == id).FirstOrDefault();
+            if (contestObj != null)
+                contestViewModel.ContestStatus = contestObj.Status;
 
             return View("StudentsMap",contestViewModel);
         }

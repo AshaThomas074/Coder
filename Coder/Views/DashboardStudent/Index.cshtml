@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Coder.Models.Contest>
+﻿@model Coder.Models.StudentDashboardModel
 
 @{
     ViewData["Title"] = "Index";
@@ -6,16 +6,25 @@
     var activeContests = new List<Contest>();
     var archivedContests = new List<Contest>();
     TimeSpan time = TimeSpan.Zero;
-    if (Model != null && Model.Count() > 0)
+    if (Model != null && Model.Contests != null && Model.Contests.Count() > 0)
     {
-        activeContests = Model.Where(x => x.Status == 1).ToList();
-        archivedContests = Model.Where(x => x.Status == 0).ToList();
+        activeContests = Model.Contests.Where(x => x.Status == 1 || x.FinalDate > DateTime.Now).ToList();
+        archivedContests = Model.Contests.Where(x => x.Status == 0 || x.FinalDate < DateTime.Now).ToList();
     }
 }
 <link href="~/css/percent.css" rel="stylesheet" />
 <h2>Contests</h2>
 <hr />
 <br />
+@if (Model != null && Model.Response != null)
+{
+    if (!Model.Response.IsSuccess)
+    {       
+        <div class="alert alert-danger" role="alert">
+            @Model.Response.Message
+        </div>
+    }
+}
 <form>
 <h4>Active Contests</h4>
 <div>

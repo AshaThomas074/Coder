@@ -16,8 +16,9 @@
                 <label asp-for="ContestName" class="control-label"></label>                
                 <span asp-validation-for="ContestName" class="text-danger"></span>
             </div>
-            <div class="form-floating">
-                <input asp-for="FinalDate" class="form-control" />
+            <div class="form-floating">                
+               
+                <input type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" asp-for="FinalDate" class="form-control" />
                 <label asp-for="FinalDate" class="control-label"></label>                
                 <span asp-validation-for="FinalDate" class="text-danger"></span>
             </div>
@@ -34,4 +35,5 @@
 <div style="margin-top:10px;">
     <a asp-action="Index">Back to List</a>
 </div>
+
 

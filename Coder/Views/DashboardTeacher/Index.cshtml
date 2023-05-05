@@ -9,8 +9,8 @@
     TimeSpan time = TimeSpan.Zero;
     if (Model != null && Model.Count() > 0)
     {
-        activeContests = Model.Where(x => x.Status == 1).ToList();
-        archivedContests = Model.Where(x => x.Status == 0).ToList();
+        activeContests = Model.Where(x => x.Status == 1 || x.FinalDate > DateTime.Now).ToList();
+        archivedContests = Model.Where(x => x.Status == 0 || x.FinalDate < DateTime.Now).ToList();
     }
 }
 <link href="~/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />

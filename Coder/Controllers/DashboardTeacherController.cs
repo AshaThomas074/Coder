@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Coder.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Teacher,Teaching Assistant")]
     public class DashboardTeacherController : Controller
     {
         private readonly CoderDBContext _coderDBContext;

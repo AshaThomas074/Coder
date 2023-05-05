@@ -1,5 +1,4 @@
-﻿<!-- IEnumerable<Coder.Models.StudentContestMap>-->
-@model Coder.Models.ContestViewModel
+﻿@model Coder.Models.ContestViewModel
 
 @{
     ViewData["Title"] = "StudentsMap";
@@ -9,28 +8,31 @@
 
 <h2>StudentsMap</h2>
 
-    @if (Model != null && Model.StudentContestMap != null)
+@if (Model != null && Model.ContestStatus == 1)
 {
-    <div style="width:32%">
-        <form asp-action="MapStudentToContest">
-            <select id="ddlBatches" class="form-select" asp-for="StudentBatchId" asp-items="@Model.ddlStudentBatches">
-                <option value="">Select Student Batch</option>
-            </select>
-            <span id="spnValid" asp-validation-for="StudentBatchId" class="text-danger">
-                The field is required.
-            </span>
+    @if (Model.StudentContestMap != null)
+    {
+        <div style="width:32%">
+            <form asp-action="MapStudentToContest">
+                <select id="ddlBatches" class="form-select" asp-for="StudentBatchId" asp-items="@Model.ddlStudentBatches">
+                    <option value="">Select Student Batch</option>
+                </select>
+                <span id="spnValid" asp-validation-for="StudentBatchId" class="text-danger">
+                    The field is required.
+                </span>
 
-            <select id="ddlBatches" class="form-select" asp-for="@Model.StudentContestMap.UserId" asp-items="@Model.ddlStudents">
-                <option value="">Select Student</option>
-            </select>
-            <span id="spnValid" asp-validation-for="@Model.StudentContestMap.UserId" class="text-danger">
-                
-            </span>
+                <select id="ddlBatches" class="form-select" asp-for="@Model.StudentContestMap.UserId" asp-items="@Model.ddlStudents">
+                    <option value="">Select Student</option>
+                </select>
+                <span id="spnValid" asp-validation-for="@Model.StudentContestMap.UserId" class="text-danger">
 
-            <input type="hidden" asp-for="@Model.StudentContestMap.ContestId" />
-            <input type="submit" id="btnStudentSubmit" value="Save" class="btn btn-primary" />
-        </form>
-    </div>
+                </span>
+
+                <input type="hidden" asp-for="@Model.StudentContestMap.ContestId" />
+                <input type="submit" id="btnStudentSubmit" value="Save" class="btn btn-primary" />
+            </form>
+        </div>
+    }
 }
 
 <table class="table">
@@ -65,8 +67,10 @@
                     </td>
                     
                     <td>
+                        @if (Model != null && Model.ContestStatus == 1){
                         @Html.ActionLink("Remove Mapping", "DeleteStudentContestMaping", new { id=item.StudentContestId, cid=Model.StudentContestMap.ContestId },
                 new { onclick = "return confirm('Are sure wants to delete?');" })
+                        }
                     </td>
                 </tr>
             }

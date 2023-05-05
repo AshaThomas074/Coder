@@ -30,8 +30,8 @@
                         <tr>
                             <td style="width:40%"> <h5>@item.ContestName</h5></td>
                             <td style="width:30%"> @item.FinalDate</td>
-                            <td style="width:30%"><a asp-action="GetLeaderBoard" asp-route-id="@item.ContestId" class="btn btn-primary">LeaderBoard</a></td>                            
-                            
+                            <td style="width:30%"><a asp-action="GetLeaderBoard" asp-route-id="@item.ContestId">View Current LeaderBoard</a></td>
+
                         </tr>
                     </table>
                 </div>
@@ -51,7 +51,7 @@
                         <tr>
                             <td style="width:40%"> <h5>@item.ContestName</h5></td>
                             <td style="width:30%"> @item.FinalDate</td>                           
-                            <td style="width:30%"><a asp-action="GetLeaderBoard" asp-route-id="@item.ContestId">View Current LeaderBoard</a></td>
+                            <td style="width:30%"><a asp-action="GetLeaderBoard" asp-route-id="@item.ContestId">View LeaderBoard</a></td>
                            
                         </tr>
                     </table>

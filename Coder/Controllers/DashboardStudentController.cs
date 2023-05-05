@@ -27,6 +27,7 @@ namespace Coder.Controllers
         }
         public IActionResult Index()
         {
+            StudentDashboardModel model = null;
             var userid = _userManager.GetUserId(HttpContext.User);
             var user = _userManager.FindByIdAsync(userid);
             
@@ -61,7 +62,16 @@ namespace Coder.Controllers
                                                        ).FirstOrDefault()
                                              });
 
-            return View(contest);
+            model = new StudentDashboardModel();
+            model.Contests = contest;        
+
+            if (TempData["resp"] != null)
+            {
+                model.Response = (ResponseModel)TempData["resp"];
+                TempData["resp"] = null;
+            }
+
+            return View(model);
         }
 
         public IActionResult ViewQuestions(int id)
@@ -232,119 +242,135 @@ namespace Coder.Controllers
             if (viewModel.Submission != null)
             {
                 var submission = viewModel.Submission;
-
-                if (viewModel.Question != null)
+                var finalDate = (from x in _coderDBContext.Contest
+                                 where (from y in _coderDBContext.QuestionContestMap
+                                        where y.QuestionContestId == submission.QuestionContestId
+                                        select y.ContestId).Contains(x.ContestId)
+                                 select x.FinalDate).FirstOrDefault();
+                if (finalDate >= DateTime.Now)
                 {
-                    var questions = await _coderDBContext.Question.FirstOrDefaultAsync(x => x.QuestionId == viewModel.Question.QuestionId);
-                    jConObj.script = submission.SubmissionContent;
-                    jConObj.language = viewModel.JDoodleLanguageCode;
-                    jConObj.versionIndex = viewModel.VersionIndex;
-
-                    int noOfTestCases = 0;
-                    int testCasesPassed = 0;
-                    if (questions != null)
+                    if (viewModel.Question != null)
                     {
-                        if (!string.IsNullOrEmpty(questions.TestCaseInput1))
-                        {
-                            jConObj.stdin = questions.TestCaseInput1;
-                            jConObj.TestOutput = questions.TestCaseOutput1;
-                            noOfTestCases++;
+                        var questions = await _coderDBContext.Question.FirstOrDefaultAsync(x => x.QuestionId == viewModel.Question.QuestionId);
+                        jConObj.script = submission.SubmissionContent;
+                        jConObj.language = viewModel.JDoodleLanguageCode;
+                        jConObj.versionIndex = viewModel.VersionIndex;
 
-                            SolveQuestionViewModel result = await JDoodleAPICall(jConObj);
-                            if (result != null)
+                        int noOfTestCases = 0;
+                        int testCasesPassed = 0;
+                        if (questions != null)
+                        {
+                            if (!string.IsNullOrEmpty(questions.TestCaseInput1))
                             {
-                                if (result.Success == 1)
+                                jConObj.stdin = questions.TestCaseInput1;
+                                jConObj.TestOutput = questions.TestCaseOutput1;
+                                noOfTestCases++;
+
+                                SolveQuestionViewModel result = await JDoodleAPICall(jConObj);
+                                if (result != null)
                                 {
-                                    testCasesPassed++;
+                                    if (result.Success == 1)
+                                    {
+                                        testCasesPassed++;
+                                    }
                                 }
                             }
-                        }
 
-                        if (!string.IsNullOrEmpty(questions.TestCaseInput2))
-                        {
-                            jConObj.stdin = questions.TestCaseInput2;
-                            jConObj.TestOutput = questions.TestCaseOutput2;
-                            noOfTestCases++;
-
-                            SolveQuestionViewModel result = await JDoodleAPICall(jConObj);
-                            if (result != null)
+                            if (!string.IsNullOrEmpty(questions.TestCaseInput2))
                             {
-                                if (result.Success == 1)
+                                jConObj.stdin = questions.TestCaseInput2;
+                                jConObj.TestOutput = questions.TestCaseOutput2;
+                                noOfTestCases++;
+
+                                SolveQuestionViewModel result = await JDoodleAPICall(jConObj);
+                                if (result != null)
                                 {
-                                    testCasesPassed++;
+                                    if (result.Success == 1)
+                                    {
+                                        testCasesPassed++;
+                                    }
                                 }
                             }
-                        }
 
-                        if (!string.IsNullOrEmpty(questions.TestCaseInput3))
-                        {
-                            jConObj.stdin = questions.TestCaseInput3;
-                            jConObj.TestOutput = questions.TestCaseOutput3;
-                            noOfTestCases++;
-
-                            SolveQuestionViewModel result = await JDoodleAPICall(jConObj);
-                            if (result != null)
+                            if (!string.IsNullOrEmpty(questions.TestCaseInput3))
                             {
-                                if (result.Success == 1)
+                                jConObj.stdin = questions.TestCaseInput3;
+                                jConObj.TestOutput = questions.TestCaseOutput3;
+                                noOfTestCases++;
+
+                                SolveQuestionViewModel result = await JDoodleAPICall(jConObj);
+                                if (result != null)
                                 {
-                                    testCasesPassed++;
+                                    if (result.Success == 1)
+                                    {
+                                        testCasesPassed++;
+                                    }
                                 }
                             }
+
+                            TempData["NumberOfTestCasesPassed"] = testCasesPassed;
+                            TempData["TotalTestCases"] = noOfTestCases;
+
+                            var score = (testCasesPassed * questions.Score) / noOfTestCases;
+
+                            if (submission.SubmissionId != 0) //update submissions
+                            {
+                                submission.UpdatedOn = DateTime.Now;
+                                submission.SubmittedStatus = 1;
+                                submission.NumberOfTestCasesPassed = testCasesPassed;
+                                submission.TotalTestCases = noOfTestCases;
+                                submission.Score = score;
+                                _coderDBContext.Update(submission);
+                                await _coderDBContext.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                submission.CreatedOn = DateTime.Now;
+                                submission.UpdatedOn = DateTime.Now;
+                                submission.SubmittedStatus = 0;
+                                submission.Score = score;
+                                _coderDBContext.Add(submission);
+                                await _coderDBContext.SaveChangesAsync();
+                            }
+
+                            var questionContestModel = _coderDBContext.QuestionContestMap.FirstOrDefault(x => x.QuestionContestId == submission.QuestionContestId);
+                            if (questionContestModel != null)
+                            {
+                                questionContestModel.CompletedCount++;
+                                questionContestModel.StartedCount--;
+                                questionContestModel.UpdatedOn = DateTime.Now;
+                                _coderDBContext.Update(questionContestModel);
+                                await _coderDBContext.SaveChangesAsync();
+                            }
+
+                            var map = _coderDBContext.StudentContestMap.Where(x => x.ContestId == viewModel.ContestId && x.UserId == submission.UserId).FirstOrDefault();
+                            if (map != null)
+                            {
+                                var subResult = (from a in _coderDBContext.Submission
+                                                 where a.UserId == submission.UserId && a.SubmittedStatus == 1 &&
+                                                 (from b in _coderDBContext.QuestionContestMap
+                                                  where b.ContestId == viewModel.ContestId
+                                                  select b.QuestionContestId).Contains(a.QuestionContestId)
+                                                 select a).ToList();
+
+                                map.QuestionsAttended = subResult.Count;
+                                map.TotalEarnedScore = subResult.Sum(x => x.Score);
+                                _coderDBContext.Update(map);
+                                _coderDBContext.SaveChanges();
+
+                            }
+                            return RedirectToAction("LoadSolveChallengePage", new { qid = viewModel.Question.QuestionId, cid = viewModel.ContestId });
                         }
-
-                        TempData["NumberOfTestCasesPassed"] = testCasesPassed;
-                        TempData["TotalTestCases"] = noOfTestCases;
-
-                        var score = (testCasesPassed * questions.Score) / noOfTestCases;
-
-                        if (submission.SubmissionId != 0) //update submissions
-                        {
-                            submission.UpdatedOn = DateTime.Now;
-                            submission.SubmittedStatus = 1;
-                            submission.NumberOfTestCasesPassed = testCasesPassed;
-                            submission.TotalTestCases = noOfTestCases;
-                            submission.Score = score;
-                            _coderDBContext.Update(submission);
-                            await _coderDBContext.SaveChangesAsync();
-                        }
-                        else
-                        {
-                            submission.CreatedOn = DateTime.Now;
-                            submission.UpdatedOn = DateTime.Now;
-                            submission.SubmittedStatus = 0;
-                            submission.Score = score;
-                            _coderDBContext.Add(submission);
-                            await _coderDBContext.SaveChangesAsync();
-                        }
-
-                        var questionContestModel = _coderDBContext.QuestionContestMap.FirstOrDefault(x => x.QuestionContestId == submission.QuestionContestId);
-                        if (questionContestModel != null)
-                        {
-                            questionContestModel.CompletedCount++;
-                            questionContestModel.StartedCount--;
-                            questionContestModel.UpdatedOn = DateTime.Now;
-                            _coderDBContext.Update(questionContestModel);
-                            await _coderDBContext.SaveChangesAsync();
-                        }
-
-                        var map = _coderDBContext.StudentContestMap.Where(x => x.ContestId == viewModel.ContestId && x.UserId == submission.UserId).FirstOrDefault();
-                        if (map != null)
-                        {
-                            var subResult = (from a in _coderDBContext.Submission
-                                             where a.UserId == submission.UserId && a.SubmittedStatus == 1 &&
-                                             (from b in _coderDBContext.QuestionContestMap
-                                              where b.ContestId == viewModel.ContestId
-                                              select b.QuestionContestId).Contains(a.QuestionContestId)
-                                             select a).ToList();
-
-                            map.QuestionsAttended = subResult.Count;
-                            map.TotalEarnedScore = subResult.Sum(x => x.Score);
-                            _coderDBContext.Update(map);
-                            _coderDBContext.SaveChanges();
-
-                        }
-                        return RedirectToAction("LoadSolveChallengePage", new { qid = viewModel.Question.QuestionId, cid = viewModel.ContestId });
                     }
+                }
+                else
+                {
+                    ResponseModel resp = new()
+                    {
+                        IsSuccess = false,
+                        Message = "Sorry Contest end now"
+                    };
+                    TempData["resp"] = resp;
                 }
             }
 

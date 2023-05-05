@@ -16,7 +16,8 @@ namespace Coder.Models
         [Required]
         
         [Display(Name ="Final Date")]
-        public DateTime FinalDate { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
+        //public DateTime FinalDate { get; set; } = DateTime.Now;
+        public DateTime FinalDate { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 
         public DateTime CreatedOn { get; set; } = DateTime.Now;
         public DateTime UpdatedOn { get; set; } = DateTime.Now;

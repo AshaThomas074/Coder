@@ -12,6 +12,7 @@ namespace Coder.Models
         
         public string? UserExternalId { get; set; }
         public int? StudentBatchId { get; set; }
+        public int? ContestStatus { get; set; }
         public StudentContestMap? StudentContestMap { get; set; }
         public IEnumerable<SelectListItem>? ddlStudents { get; set; }
         public IEnumerable<SelectListItem>? ddlStudentBatches { get; set; }
