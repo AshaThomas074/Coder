@@ -1,0 +1,65 @@
+﻿@model Coder.Models.ContestViewModel
+
+@{
+    ViewData["Title"] = "StudentsMap";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<h2>Students</h2>
+
+@if (Model != null)
+{
+
+        <div style="width:32%">
+            <form asp-action="Index" method="post">
+                <select id="ddlBatches" class="form-select" asp-for="StudentBatchId" asp-items="@Model.ddlStudentBatches">
+                    <option value="">Select Student Batch</option>
+                </select>
+                <span id="spnValid" asp-validation-for="StudentBatchId" class="text-danger">
+                    The field is required.
+                </span>
+              
+                <input type="submit" id="btnStudentView" value="View" class="btn btn-primary" />
+            </form>
+        </div>
+    
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserExternalId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.StudentsList != null)
+        {
+            @foreach (var item in Model.StudentsList)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserExternalId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>

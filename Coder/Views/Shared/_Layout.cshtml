@@ -45,7 +45,10 @@
                                     <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" id="contest" asp-controller="BulkUpload" asp-action="Index">Bulk Upload</a>
+                                    <a class="nav-link text-dark" id="bulk" asp-controller="BulkUpload" asp-action="Index">Bulk Upload</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" id="view" asp-controller="ViewStudents" asp-action="Index">View Students</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" id="contest" asp-controller="Contests" asp-action="Index">Contest</a>
@@ -67,7 +70,10 @@
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="DashboardTeacher" asp-action="Index">Home</a>
-                                </li>                               
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" id="view" asp-controller="ViewStudents" asp-action="Index">View Students</a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" id="contest" asp-controller="Contests" asp-action="Index">Contest</a>
                                 </li>

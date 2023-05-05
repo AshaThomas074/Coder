@@ -269,9 +269,20 @@ namespace Coder.Controllers
             });
 
             //Gel all students who are not mapped to contest
-            var loggedinId=_userManager.GetUserId(HttpContext.User);
+            var loggedinId = _userManager.GetUserId(HttpContext.User);
+            string temp = HttpContext.Session.GetString("users");
+            var users = JsonConvert.DeserializeObject<List<string>>(temp);
+
+            if (users == null)
+            {
+                users = new List<string>
+                    {
+                        loggedinId
+                    };
+            }
+            
             var allusers = await _userManager.GetUsersInRoleAsync("Student");
-            var students = allusers.Where(x => x.CreatedBy == loggedinId).ToList();
+            var students = allusers.Where(x => users.Contains(x.CreatedBy)).ToList();
 
             var result = (from a in students
                           where !(from b in _context.StudentContestMap
