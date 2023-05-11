@@ -69,7 +69,7 @@
                     <td>
                         @if (Model != null && Model.ContestStatus == 1){
                         @Html.ActionLink("Remove Mapping", "DeleteStudentContestMaping", new { id=item.StudentContestId, cid=Model.StudentContestMap.ContestId },
-                new { onclick = "return confirm('Are sure wants to delete?');" })
+                new { onclick = "return confirm('Are you sure wants to delete?');" })
                         }
                     </td>
                 </tr>

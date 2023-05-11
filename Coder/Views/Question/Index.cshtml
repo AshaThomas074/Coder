@@ -38,14 +38,14 @@
                 @Html.DisplayFor(modelItem => item.Score)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Difficulty)
+                    @Html.DisplayFor(modelItem => item.DifficultyName)
             </td>
             
             <td>
                 <a asp-action="Edit" asp-route-id="@item.QuestionId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.QuestionId">Details</a> |
                     @Html.ActionLink("Delete", "Delete", new { id = item.QuestionId },
-                new { onclick = "return confirm('Are sure wants to delete?');" })
+                new { onclick = "return confirm('Are you sure wants to delete?');" })
             </td>
         </tr>
 }

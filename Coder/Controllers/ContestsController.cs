@@ -196,7 +196,7 @@ namespace Coder.Controllers
             }
 
             var contest = await _context.Contest.FindAsync(id);
-            if (contest != null && contest.PublishedStatus != 1)
+            if (contest != null && (contest.PublishedStatus != 1 || contest.Status ==0))
             {
                 var studConMap = _context.StudentContestMap.Where(x => x.ContestId == id).ToList();
                 if(studConMap != null && studConMap.Count > 0)

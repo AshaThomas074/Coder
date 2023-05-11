@@ -41,8 +41,17 @@ namespace Coder.Controllers
                         userId
                     };
                 }
-                    
-                var questions=await _coderDBContext.Question.Where(x => users.Contains(x.UserId) && x.Status == 1).ToListAsync(); //questions by teacherid for teacher
+
+                var questions =await (from a in _coderDBContext.Question
+                                 where a.Status == 1 && users.Contains(a.UserId)
+                                 select new Question()
+                                 {
+                                     QuestionId = a.QuestionId,
+                                     QuestionHeading = a.QuestionHeading,
+                                     Score = a.Score,
+                                     DifficultyName = a.QuestionDifficulty != null ? a.QuestionDifficulty.DifficultyName : "",
+                                 }).ToListAsync();
+                   // await _coderDBContext.Question.Where(x => users.Contains(x.UserId) && x.Status == 1).ToListAsync(); 
                 return View(questions);
             }
             catch (Exception )

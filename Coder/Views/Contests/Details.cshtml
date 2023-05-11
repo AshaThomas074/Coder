@@ -79,7 +79,7 @@ else
                             <option value="">Select Question</option>
                         </select>
                         <span id="spnValid" asp-validation-for="@Model.QuestionContestMap.QuestionId" class="text-danger">
-                            The Difficulty field is required.
+                            This field is required.
                         </span>
                     </td>
                     <td class="col-sm-2">
@@ -127,7 +127,7 @@ else
                         {
                             <td>                        
                                 @Html.ActionLink("Delete", "DeleteQuestionContestMaping", new { Qid = item.QuestionId,Cid=Model.ContestId },
-                    new { onclick = "return confirm('Are sure wants to delete?');" })
+                    new { onclick = "return confirm('Are you sure wants to delete?');" })
                     </td>
                     }
                 </tr>

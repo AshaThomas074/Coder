@@ -50,7 +50,7 @@
                 @Html.DisplayNameFor(model => model.FinalDate)
             </th>   
             <th></th>
-            <th></th>
+            <th>Publish Contest</th>
         </tr>
     </thead>
     <tbody>
@@ -79,10 +79,10 @@
                         <a asp-action="Edit" asp-route-id="@item.ContestId">Edit</a> @(" | ")                        
                     }
                 <a asp-action="Details" asp-route-id="@item.ContestId">Details</a> 
-                    @if (item.PublishedStatus != 1) {
+                    @if (item.PublishedStatus != 1 || item.Status == 0) {
                         @(" | ")
                       @Html.ActionLink("Delete", "Delete", new { id = item.ContestId },
-                  new { onclick = "return confirm('Are you sure wants to delete?');" })
+                new { onclick = "return confirm('Are you sure wants to delete?');",@class="delete"+item.ContestId })
                     }
             </td>
                 <td style="width:20%">
@@ -91,9 +91,10 @@
                         <label class="switch" >
                                         <input type="checkbox" id="toggleContestSwitch_@(item.ContestId)" class="toggle-contest-switch" data-contestid="@item.ContestId">
                                         <span class="slider round" id="sliderContestRound_@(item.ContestId)"></span>
-                                </label>
-                                
-                }
+                        </label>
+
+                    }
+                    
             </td>
         </tr>
 }

@@ -99,6 +99,7 @@ $(document).ready(function () {
                     success: function (response) {
                         if (response != null && response == 1) {
                             $("#sliderContestRound_" + contestId).hide();
+                            $(".delete" + contestId).hide();
                         }
                     },
                     error: function (error) { console.log(error); }
@@ -114,5 +115,13 @@ $(document).ready(function () {
     window.setTimeout(function () {
         $(".alert").hide();
     }, 5000); 
+
+    $("#btnStudentView").on("click", function () {
+        if ($("#ddlBatches").val() == "") {
+            $("#spnValid").show();
+            $("#divStudentList").hide();
+            return false;
+        }
+    });
 
 });

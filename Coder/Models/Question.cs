@@ -63,6 +63,8 @@ namespace Coder.Models
         public DateTime UpdatedOn { get; set; } = DateTime.Now;
         public int Status { get; set; }
         [NotMapped]
+        public string? DifficultyName { get; set; }
+        [NotMapped]
         public IEnumerable<SelectListItem>? difficulties { get; set; }
         public ICollection<QuestionContestMap>? QuestionContestMaps { get; set; }
         [NotMapped]

@@ -53,18 +53,13 @@
 
                         <h5>Sample Input</h5>
                         <div class="div-input-output">
-                            <span style="white-space: pre;">
-                                @(!string.IsNullOrEmpty(Model.Question.SampleInput) ? Model.Question.SampleInput : "N/A")
-                            </span>
+                            <span style="white-space: pre;">@(!string.IsNullOrEmpty(Model.Question.SampleInput) ? Model.Question.SampleInput : "N/A")</span>
                         </div>
 
 
                         <h5>Sample Output</h5>
                         <div class="div-input-output">
-                            <span style="white-space: pre;">
-                                @(
-                        !string.IsNullOrEmpty(Model.Question.SampleOutput) ? Model.Question.SampleOutput : "N/A"
-                        )</span>
+                            <span style="white-space: pre;">@(!string.IsNullOrEmpty(Model.Question.SampleOutput) ? Model.Question.SampleOutput : "N/A")</span>
                         </div>
 
                     </div>
@@ -134,7 +129,7 @@
 
                         @if (Model.Submission != null && !string.IsNullOrEmpty(Model.Submission.SubmissionContent))
                         {
-                            @Model.Submission.SubmissionContent
+                            @Model.Submission.SubmissionContent.TrimStart()
                         }
                         else
                         {

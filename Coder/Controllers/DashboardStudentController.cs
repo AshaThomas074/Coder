@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Data;
 using System.Security.Policy;
 using System.Text;
 
 namespace Coder.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Student")]
     public class DashboardStudentController : Controller
     {
         private readonly CoderDBContext _coderDBContext;
@@ -67,7 +68,8 @@ namespace Coder.Controllers
 
             if (TempData["resp"] != null)
             {
-                model.Response = (ResponseModel)TempData["resp"];
+                string temp = (string)TempData["resp"];
+                model.Response = JsonConvert.DeserializeObject<ResponseModel>(temp);
                 TempData["resp"] = null;
             }
 
@@ -370,7 +372,7 @@ namespace Coder.Controllers
                         IsSuccess = false,
                         Message = "Sorry Contest end now"
                     };
-                    TempData["resp"] = resp;
+                    TempData["resp"] = JsonConvert.SerializeObject(resp);
                 }
             }
 
@@ -398,7 +400,7 @@ namespace Coder.Controllers
                 returnoutput = result.output;
             }
              
-            if (!string.IsNullOrEmpty(res) && res.Contains("error"))
+            if (!string.IsNullOrEmpty(res) && res.ToLower().Contains("error"))
             {
                 viewModel.Error = result.output;
             }

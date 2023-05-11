@@ -11,7 +11,7 @@
 @if (Model != null)
 {
 
-        <div style="width:32%">
+        <div style="width:32%" class="form-group">
             <form asp-action="Index" method="post">
                 <select id="ddlBatches" class="form-select" asp-for="StudentBatchId" asp-items="@Model.ddlStudentBatches">
                     <option value="">Select Student Batch</option>
@@ -19,13 +19,15 @@
                 <span id="spnValid" asp-validation-for="StudentBatchId" class="text-danger">
                     The field is required.
                 </span>
-              
+              <br>
                 <input type="submit" id="btnStudentView" value="View" class="btn btn-primary" />
             </form>
         </div>
     
 }
-
+<div id="divStudentList">
+ @if (Model != null && Model.StudentsList != null && Model.StudentsList.Count() > 0)
+ {
 <table class="table">
     <thead>
         <tr>
@@ -41,9 +43,7 @@
             
         </tr>
     </thead>
-    <tbody>
-        @if (Model != null && Model.StudentsList != null)
-        {
+    <tbody>       
             @foreach (var item in Model.StudentsList)
             {
                 <tr>
@@ -60,6 +60,12 @@
 
                 </tr>
             }
-        }
+        
     </tbody>
 </table>
+}
+else if (Model != null && Model.StudentBatchId != null)
+{
+    <p>No students for this batch</p>
+}
+</div>
