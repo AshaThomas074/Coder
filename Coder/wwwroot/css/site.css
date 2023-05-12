@@ -17,9 +17,6 @@ body {
   margin-bottom: 60px;
 }
 
-.footer {
-    position: absolute !important;
-}
 
 
 .box-shadow[b-2bos0jdq8r] {
@@ -166,13 +163,14 @@ input:checked + .slider:before {
     margin-top:20px;
 }
 
-.footer {
-    position: absolute !important;
-    width: 100% !important;
-}
 
 .pb-3 {
     min-height: 495px;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #4F81BD !important;
 }
 
 
