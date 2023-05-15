@@ -62,7 +62,14 @@
             <td>
                     @if (item.Status == 1)
                     {
-                        @("Active")                        
+                        @if (item.PublishedStatus == 1)
+                        {
+                            @("Active")
+                        }
+                        else
+                        {
+                            @("Unpublished")
+                        }
                     }
                     else
                     {
