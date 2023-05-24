@@ -418,13 +418,13 @@ namespace Coder.Controllers
                 viewModel.Success = 1;
                 viewModel.CompiledOutput = returnoutput.TrimEnd('\r', '\n', ' ');
             }
-            else if(!string.IsNullOrEmpty(returnoutput))
+            else if(!string.IsNullOrEmpty(returnoutput) && returnoutput.TrimEnd('\r', '\n', ' ') != string.Empty)
             {
                 viewModel.CompiledOutput = returnoutput;                
             }
             else
             {
-                viewModel.CompiledOutput = "~ no response on stout ~";
+                viewModel.CompiledOutput = "~ no response on stdout ~";
             }
             return viewModel;
         }
