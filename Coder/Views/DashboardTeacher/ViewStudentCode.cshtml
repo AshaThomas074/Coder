@@ -1,0 +1,39 @@
+﻿@model Coder.Models.Submission
+
+@{
+    ViewData["Title"] = "StudentCodeStatus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var lan = Model.Language;
+}
+<style type="text/css" media="screen">
+    #editor {
+        position: absolute;
+        top: 150px;
+        right: 224px;
+        bottom: 139px;
+        left: 193px;
+        height: 315px;
+    }
+
+    div.mce-edit-area {
+        height: 400px !important;
+    }
+
+        div.mce-edit-area > iframe {
+            height: 400px !important;
+        }
+</style>
+
+<div>
+    <div id="editor">
+        @if(!string.IsNullOrEmpty(Model.SubmissionContent))
+        @Model.SubmissionContent.TrimStart()
+    </div>
+</div>
+<div>
+<a asp-action="ViewStudentStatus" asp-route-id="@Model.QuestionContestId">Back to List</a>
+</div>
+<input type="hidden" id="language" value="@lan.AceLanguageCode" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.3/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.js"></script>
+<script type="text/javascript" src="~/js/code-editor.js"></script>

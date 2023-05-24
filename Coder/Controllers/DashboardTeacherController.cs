@@ -31,8 +31,7 @@ namespace Coder.Controllers
                     {
                         userid
                     };
-            }
-            //var users = GetAccountStatus();
+            }            
 
             IEnumerable<Contest> contest = (from a in _coderDBContext.Contest
                                             where a.PublishedStatus == 1 &&
@@ -99,7 +98,9 @@ namespace Coder.Controllers
                               TotalTestCases = a.TotalTestCases == null ? "N/A" : a.TotalTestCases.ToString(),
                               IsStarted = a.SubmissionId != 0 ? true : false,
                               QuestionSubmittedStatus = a.SubmittedStatus,
-                              ContestSubmittedStatus = _coderDBContext.StudentContestMap.Where(x => x.UserId == a.UserId && x.ContestId == contestId).FirstOrDefault().Status 
+                              ContestSubmittedStatus = _coderDBContext.StudentContestMap.Where(x => x.UserId == a.UserId && x.ContestId == contestId).FirstOrDefault().Status, 
+                              Answer=a.SubmissionContent,
+                              QuestionContestId=a.QuestionContestId
                           }).ToList();
 
             var result2 = (from a in _coderDBContext.StudentContestMap
@@ -118,46 +119,25 @@ namespace Coder.Controllers
                                TotalTestCases = "N/A",
                                IsStarted = false,
                                QuestionSubmittedStatus = 0,
-                               ContestSubmittedStatus = 0
+                               ContestSubmittedStatus = 0,
+                               Answer = "",
+                               QuestionContestId = id
                            }).ToList();
 
             var result = result1.Union(result2).OrderBy(x=>x.StudentName);
             return View("StudentQuestionStatus",result);
         }
 
-        private List<string> GetAccountStatus()
+        public IActionResult ViewStudentCode(string uid,int qcid)
         {
-            List<string> users = new();
-            var userId = _userManager.GetUserId(HttpContext.User);
-
-            if (User.IsInRole("Teacher"))
+            var result = _coderDBContext.Submission.Where(x => x.UserId == uid && x.QuestionContestId == qcid).Select(y => new Submission()
             {
-                users = (from a in _coderDBContext.UserRoles
-                         where (from c in _coderDBContext.Roles
-                                where c.Name == "Teaching Assistant"
-                select c.Id).Contains(a.RoleId)
-                         && (from b in _coderDBContext.Users
-                             where b.CreatedBy == userId
-                             select b.Id).Contains(a.UserId)
-                         select a.UserId).ToList();
-                users.Add(userId);
-            }
-            else if (User.IsInRole("Teaching Assistant"))
-            {
-                var user = _userManager.FindByIdAsync(userId);
-                users = (from a in _coderDBContext.UserRoles
-                         where (from c in _coderDBContext.Roles
-                                where c.Name == "Teaching Assistant"
-                                select c.Id).Contains(a.RoleId)
-                         && (from b in _coderDBContext.Users
-                             where b.CreatedBy == user.Result.CreatedBy
-                             select b.Id).Contains(a.UserId)
-                         select a.UserId).ToList();
-
-                users.Add(user.Result.CreatedBy);
-            }
-
-            return users;
+                QuestionContestId = y.QuestionContestId,
+                SubmissionContent = y.SubmissionContent,
+                UserId = y.UserId,
+                Language = _coderDBContext.Language.Where(z => z.LanguageId == y.LanguageId).FirstOrDefault()
+            }).FirstOrDefault();
+            return View(result);
         }
     }
 }

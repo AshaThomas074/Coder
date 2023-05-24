@@ -99,6 +99,7 @@ $(document).ready(function () {
                     success: function (response) {
                         if (response != null && response == 1) {
                             $("#sliderContestRound_" + contestId).hide();
+                            $("#status_" + contestId).text("Active");
                             $(".delete" + contestId).hide();
                         }
                     },
@@ -124,4 +125,13 @@ $(document).ready(function () {
         }
     });
 
+    
+
+    $(".user-div").on("click", function () {
+        var userid=$(this).children("div").attr("id").split("_")[1];
+        var editor = ace.edit("editor_"+userid);
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/java");
+        $("#editor_" + userid+"").show();        
+    });
 });

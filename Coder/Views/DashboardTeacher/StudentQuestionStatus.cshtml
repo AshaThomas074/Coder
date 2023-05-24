@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Coder.Models.StudentStatusViewModel>
 
 @{
-    ViewData["Title"] = "LeaderBoard";
+    ViewData["Title"] = "StudentStatus";
     Layout = "~/Views/Shared/_Layout.cshtml";   
 }
 
@@ -25,6 +25,7 @@
             <th>
                 Status
             </th>
+            <th></th>
 
         </tr>
     </thead>
@@ -75,11 +76,17 @@
 
                     @status
                 </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Answer))
+                    {
+                            @Html.ActionLink("View Code", "ViewStudentCode", new { uid = item.UserId,qcid= item.QuestionContestId})
+                    }
+                </td>
 
             </tr>
         }
     </tbody>
 </table>
-    <a asp-action="Index" asp-route-id="@Model.FirstOrDefault().ContestId">Back to List</a>
+<a asp-action="Index" asp-route-id="@Model.FirstOrDefault().ContestId">Back to List</a>
 
 

@@ -12,5 +12,7 @@
         public int? QuestionSubmittedStatus { get; set; }
         public int? ContestSubmittedStatus { get; set; }        
         public int? ContestId { get; set; }
+        public string? Answer { get; set; }
+        public int? QuestionContestId { get; set; }
     }
 }
