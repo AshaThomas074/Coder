@@ -8,6 +8,7 @@
         public string? VersionIndex { get; set; }
         public string? Error { get; set; }
         public int? Success { get; set; }
+        public string? CompiledOutput { get; set; }
         public int? StudentContestFinishStatus { get; set; }
         public Question? Question { get; set; }
         public Submission? Submission { get; set; }

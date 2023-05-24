@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Coder.Controllers
 {
@@ -120,6 +121,8 @@ namespace Coder.Controllers
                 viewModel.Error = (string)TempData["Error"];
             if (TempData["Success"] != null)
                 viewModel.Success = (int)TempData["Success"];
+            if (TempData["CompiledOutput"] != null)
+                viewModel.CompiledOutput = (string)TempData["CompiledOutput"];
 
             var questionContestId = await _coderDBContext.QuestionContestMap.Where(x => x.ContestId == cid && x.QuestionId == qid).Select(y => y.QuestionContestId).FirstOrDefaultAsync();
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -165,6 +168,8 @@ namespace Coder.Controllers
             TempData["Success"] = null;
             TempData["NumberOfTestCasesPassed"] = null;
             TempData["TotalTestCases"] = null;
+            TempData["CompiledOutput"] = null;
+
             return View("SolveQuestion", viewModel);
         }
 
@@ -216,6 +221,10 @@ namespace Coder.Controllers
                             if (result.Error != null)
                             {
                                 TempData["Error"] = result.Error;
+                            }
+                            if (!string.IsNullOrEmpty(result.CompiledOutput))
+                            {
+                                TempData["CompiledOutput"]=result.CompiledOutput;
                             }
                         }
                         //Update challenge started count- start
@@ -407,6 +416,15 @@ namespace Coder.Controllers
             else if (!string.IsNullOrEmpty(sampleoutput) && !string.IsNullOrEmpty(returnoutput) && returnoutput.TrimEnd('\r', '\n', ' ') == sampleoutput.TrimEnd('\r', '\n', ' '))
             {
                 viewModel.Success = 1;
+                viewModel.CompiledOutput = returnoutput.TrimEnd('\r', '\n', ' ');
+            }
+            else if(!string.IsNullOrEmpty(returnoutput))
+            {
+                viewModel.CompiledOutput = returnoutput;                
+            }
+            else
+            {
+                viewModel.CompiledOutput = "~ no response on stout ~";
             }
             return viewModel;
         }

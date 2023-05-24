@@ -59,7 +59,7 @@
             <td style="width:40%">
                 @Html.DisplayFor(modelItem => item.ContestName)
             </td>
-            <td>
+                <td>
                     @if (item.Status == 1)
                     {
                         @if (item.PublishedStatus == 1)
@@ -68,7 +68,7 @@
                         }
                         else
                         {
-                            @("Unpublished")
+                            <p id="status_@(item.ContestId)">@("Unpublished")</p>
                         }
                     }
                     else

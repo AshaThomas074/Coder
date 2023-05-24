@@ -25,10 +25,17 @@
     }
 
     .div-input-output{
-        width: 608px;
+        width: 653px;
         background-color: lightgray;
         padding: 10px;
     }
+
+    .div-testresult {
+        width: 615px;
+        background-color: lightgray;
+        padding: 10px;        
+    }
+
 </style>
 
 @if (Model != null)
@@ -55,18 +62,18 @@
                         <div class="div-input-output">
                             <span style="white-space: pre;">@(!string.IsNullOrEmpty(Model.Question.SampleInput) ? Model.Question.SampleInput : "N/A")</span>
                         </div>
-
+                        <br>
 
                         <h5>Sample Output</h5>
                         <div class="div-input-output">
                             <span style="white-space: pre;">@(!string.IsNullOrEmpty(Model.Question.SampleOutput) ? Model.Question.SampleOutput : "N/A")</span>
                         </div>
-
+                        <br>
                     </div>
-                    @if (!string.IsNullOrEmpty(Model.Error) || Model.Success == 1 || TotalTestCases != null)
+                    @if (!string.IsNullOrEmpty(Model.Error) || Model.Success == 1 || TotalTestCases != null || !string.IsNullOrEmpty(Model.CompiledOutput))
                     {
-                        <div id="runresult">
-                            <h5>Test result</h5>
+                        <h5>Test result</h5>
+                        <div id="runresult" style="border:1px solid black; padding:15px;">
                             @if (NumberOfTestCasesPassed != null && TotalTestCases != null && TotalTestCases != 0)
                             {
                                 <p style="color:green;">@(NumberOfTestCasesPassed) out of @(TotalTestCases) passed. </p>
@@ -74,10 +81,22 @@
                             else if(Model.Success == 1)
                             {
                                 <p style="color:green;">Successfully compiled and run</p>
+                                <br />
+                                <h6><b>Your Output</b></h6>
+                                <span style="white-space: pre;">@Model.CompiledOutput</span>                                
                             }
                             else if (!string.IsNullOrEmpty(Model.Error))
                             {
                                 <p style="color:red;">@Model.Error</p>
+                            }
+                            else if (!string.IsNullOrEmpty(Model.CompiledOutput))
+                            {
+                                <h6><b>Compiler Message</b></h6>
+                                <div class="div-testresult"><p>Wrong Answer</p></div>
+                                <h6><b>Your Output</b></h6>
+                                <div class="div-testresult"><span style="white-space: pre;width: 605px;word-wrap: break-word;">@Model.CompiledOutput.TrimEnd('\r', '\n', ' ')</span></div>
+                                <h6><b>Expected Output</b></h6>
+                                <div class="div-testresult"><p>@Model.Question.SampleOutput</p></div>
                             }
                         </div>
                     }
