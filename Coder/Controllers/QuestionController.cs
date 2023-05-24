@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Coder.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Teacher,Teaching Assistant")]
     public class QuestionController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -23,7 +23,6 @@ namespace Coder.Controllers
             _coderDBContext = coderDBContext;
         }
 
-        [Authorize]
         // GET: QuestionController
         public async Task<IActionResult> Index()
         {
@@ -50,8 +49,7 @@ namespace Coder.Controllers
                                      QuestionHeading = a.QuestionHeading,
                                      Score = a.Score,
                                      DifficultyName = a.QuestionDifficulty != null ? a.QuestionDifficulty.DifficultyName : "",
-                                 }).ToListAsync();
-                   // await _coderDBContext.Question.Where(x => users.Contains(x.UserId) && x.Status == 1).ToListAsync(); 
+                                 }).ToListAsync();                  
                 return View(questions);
             }
             catch (Exception )
