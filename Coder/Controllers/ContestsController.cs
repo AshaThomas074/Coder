@@ -8,21 +8,23 @@ using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using Newtonsoft.Json;
+using Coder.Services;
 
 namespace Coder.Controllers
 {
     [Authorize]
     public class ContestsController : Controller
     {
-        private readonly CoderDBContext _context;
+        public readonly CoderDBContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-
+        private ContestService _contestService;
         public ContestsController(CoderDBContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _contestService = new ContestService(context);
         }
 
         // GET: Contests
@@ -39,9 +41,13 @@ namespace Coder.Controllers
                     {
                         userId
                     };
-            }           
+            }
 
-            return View(await _context.Contest.Where(x => users.Contains(x.UserId)).OrderByDescending(y => y.Status).ToListAsync());
+            //ContestService service = new ContestService(_context);
+            var contests = _contestService.GetContests(users);
+
+            //return View(await _context.Contest.Where(x => users.Contains(x.UserId)).OrderByDescending(y => y.Status).ToListAsync());
+            return View(contests);
         }
 
         // GET: Contests/Details/5
@@ -123,13 +129,7 @@ namespace Coder.Controllers
         {
             if (ModelState.IsValid)
             {
-                contest.CreatedOn= DateTime.Now;
-                contest.UpdatedOn= DateTime.Now;
-                contest.Status = 1;
-                contest.PublishedStatus = 0;
-                contest.FinalDate = contest.FinalDate.AddHours(23).AddMinutes(59).AddSeconds(59);
-                _context.Add(contest);
-                await _context.SaveChangesAsync();
+                _contestService.CreateContest(contest);
                 return RedirectToAction(nameof(Index));
             }
             return View(contest);
@@ -194,32 +194,8 @@ namespace Coder.Controllers
             {
                 return NotFound();
             }
-
-            var contest = await _context.Contest.FindAsync(id);
-            if (contest != null && (contest.PublishedStatus != 1 || contest.Status ==0))
-            {
-                var studConMap = _context.StudentContestMap.Where(x => x.ContestId == id).ToList();
-                if(studConMap != null && studConMap.Count > 0)
-                {
-                    foreach(var stud in studConMap)
-                    {
-                        _context.StudentContestMap.Remove(stud);
-                    }
-                }
-
-                var questMap = _context.QuestionContestMap.Where(x => x.ContestId == id).ToList();
-                if (questMap != null && questMap.Count > 0)
-                {
-                    foreach (var quest in questMap)
-                    {
-                        _context.QuestionContestMap.Remove(quest);
-                    }
-                }
-
-                _context.Contest.Remove(contest);
-            }
-
-            await _context.SaveChangesAsync();
+            _contestService.DeleteContest(id);
+            
             return RedirectToAction(nameof(Index));            
         }
 
