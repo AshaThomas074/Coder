@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Coder.Services
 {
-    public class ContestService
+    public class ContestService:IContestService
     {
         private readonly CoderDBContext _context;
 

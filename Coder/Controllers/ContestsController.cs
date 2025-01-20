@@ -18,13 +18,13 @@ namespace Coder.Controllers
         public readonly CoderDBContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private ContestService _contestService;
-        public ContestsController(CoderDBContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        private IContestService _contestService;
+        public ContestsController(CoderDBContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IContestService contestService)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
-            _contestService = new ContestService(context);
+            _contestService = contestService;
         }
 
         // GET: Contests

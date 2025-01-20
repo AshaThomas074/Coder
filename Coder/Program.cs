@@ -2,6 +2,7 @@ using Coder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Coder.Models;
+using Coder.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>()
            .AddRoles<IdentityRole>()
            .AddEntityFrameworkStores<CoderDBContext>();
 
-
+builder.Services.AddTransient<IContestService, ContestService>();
 
 var app = builder.Build();
 /*
